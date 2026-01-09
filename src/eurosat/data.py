@@ -1,29 +1,78 @@
-from pathlib import Path
+from datasets import load_dataset
+import numpy as np
 
-import typer
-from torch.utils.data import Dataset
+from torch.utils.data import Dataset, DataLoader
+from torchvision.transforms import functional as F
+from torchvision import transforms
+
+# --------------------------------------------------
+# 1. Load & split dataset
+# --------------------------------------------------
+
+def load_eurosat_splits(seed: int = 42):
+    ds = load_dataset("nielsr/eurosat-demo")
+
+    split = ds["train"].train_test_split(
+        test_size=0.2,
+        seed=seed,
+    )
+
+    temp = split["test"].train_test_split(
+        test_size=0.5,
+        seed=seed,
+    )
+
+    return split["train"], temp["train"], temp["test"]
 
 
-class MyDataset(Dataset):
-    """My custom dataset."""
+# --------------------------------------------------
+# 2. PyTorch Dataset wrapper
+# --------------------------------------------------
 
-    def __init__(self, data_path: Path) -> None:
-        self.data_path = data_path
+class EuroSATDataset(Dataset):
+    def __init__(self, hf_dataset):
+        self.ds = hf_dataset
 
-    def __len__(self) -> int:
-        """Return the length of the dataset."""
+        # ResNet / ImageNet standard
+        self.transform = transforms.Compose([
+            transforms.Resize((224, 224)),
+            transforms.ToTensor(),  # scales to [0, 1]
+            transforms.Normalize(
+                mean=[0.485, 0.456, 0.406],
+                std=[0.229, 0.224, 0.225],
+            ),
+        ])
 
-    def __getitem__(self, index: int):
-        """Return a given sample from the dataset."""
+    def __len__(self):
+        return len(self.ds)
 
-    def preprocess(self, output_folder: Path) -> None:
-        """Preprocess the raw data and save it to the output folder."""
+    def __getitem__(self, idx):
+        item = self.ds[idx]
 
-def preprocess(data_path: Path, output_folder: Path) -> None:
-    print("Preprocessing data...")
-    dataset = MyDataset(data_path)
-    dataset.preprocess(output_folder)
+        image = item["image"].convert("RGB")  # PIL
+        label = item["label"]
+
+        image = self.transform(image)
+
+        return image, label
+# --------------------------------------------------
+# 3. Dataloaders
+# --------------------------------------------------
+
+def create_dataloaders(
+    batch_size: int = 32,
+    num_workers: int = 4,
+    seed: int = 42,
+):
+    train_ds, val_ds, test_ds = load_eurosat_splits(seed)
+
+    train_dataset = EuroSATDataset(train_ds)
+    val_dataset   = EuroSATDataset(val_ds)
+    test_dataset  = EuroSATDataset(test_ds)
+
+    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True,  num_workers=num_workers, pin_memory=True)
+    val_loader   = DataLoader(val_dataset,   batch_size=batch_size, shuffle=False, num_workers=num_workers, pin_memory=True)
+    test_loader  = DataLoader(test_dataset,  batch_size=batch_size, shuffle=False, num_workers=num_workers, pin_memory=True)
 
 
-if __name__ == "__main__":
-    typer.run(preprocess)
+    return train_loader, val_loader, test_loader
