@@ -12,17 +12,14 @@ from torchvision import transforms
 def load_eurosat_splits(seed: int = 42):
     ds = load_dataset("nielsr/eurosat-demo")
 
-    split = ds["train"].train_test_split(
-        test_size=0.2,
-        seed=seed,
-    )
+    split = ds["train"].train_test_split(test_size=0.2, seed=seed)
+    temp = split["test"].train_test_split(test_size=0.5, seed=seed)
 
-    temp = split["test"].train_test_split(
-        test_size=0.5,
-        seed=seed,
-    )
+    train_ds = split["train"].shuffle(seed=seed).select(range(0, len(split["train"]), 10))
+    val_ds   = temp["train"].shuffle(seed=seed).select(range(0, len(temp["train"]), 10))
+    test_ds  = temp["test"].shuffle(seed=seed).select(range(0, len(temp["test"]), 10))
 
-    return split["train"], temp["train"], temp["test"]
+    return train_ds, val_ds, test_ds
 
 
 # --------------------------------------------------
