@@ -6,7 +6,7 @@ from model import create_model
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-train_loader, val_loader, _ = create_dataloaders(batch_size=32, num_workers=4)
+train_loader, val_loader, _ = create_dataloaders(batch_size=32, num_workers=0)
 
 model = create_model(device)
 
