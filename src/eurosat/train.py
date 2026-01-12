@@ -5,7 +5,7 @@ from data import create_dataloaders
 from model import create_model
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
+torch.manual_seed(42)
 train_loader, val_loader, _ = create_dataloaders(batch_size=32, num_workers=4)
 
 model = create_model(device)
@@ -52,4 +52,4 @@ for epoch in range(epochs):
 
     print(f"Epoch {epoch+1}/{epochs} | TrainLoss {train_loss:.4f} TrainAcc {train_acc:.4f} | ValLoss {val_loss:.4f} ValAcc {val_acc:.4f}")
 
-torch.save(model.state_dict(), "models/resnet18_eurosat.pt")
+torch.save(model.state_dict(), "models/resnet18_eurosat2.pt")
