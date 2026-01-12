@@ -1,6 +1,5 @@
 from datasets import load_dataset
 import numpy as np
-
 from torch.utils.data import Dataset, DataLoader
 from torchvision.transforms import functional as F
 from torchvision import transforms
@@ -15,9 +14,9 @@ def load_eurosat_splits(seed: int = 42):
     split = ds["train"].train_test_split(test_size=0.2, seed=seed)
     temp = split["test"].train_test_split(test_size=0.5, seed=seed)
 
-    train_ds = split["train"].shuffle(seed=seed).select(range(0, len(split["train"]), 10))
-    val_ds   = temp["train"].shuffle(seed=seed).select(range(0, len(temp["train"]), 10))
-    test_ds  = temp["test"].shuffle(seed=seed).select(range(0, len(temp["test"]), 10))
+    train_ds = split["train"].shuffle(seed=seed).select(range(0, len(split["train"]), 20))
+    val_ds   = temp["train"].shuffle(seed=seed).select(range(0, len(temp["train"]), 20))
+    test_ds  = temp["test"].shuffle(seed=seed).select(range(0, len(temp["test"]), 20))
 
     return train_ds, val_ds, test_ds
 
