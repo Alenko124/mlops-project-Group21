@@ -37,8 +37,12 @@ class TrainingConfig:
     wandb_project: str = "eurosat"
 
 
-def train(config: Optional[TrainingConfig] = None) -> None:
-    """Train a classification model using the provided configuration."""
+def train(config: Optional[TrainingConfig] = None) -> List[Dict[str, float]]:
+    """Train a classification model using the provided configuration.
+    
+    Returns:
+        Training history with metrics for each epoch.
+    """
 
     cfg = config or TrainingConfig()
     device = _get_device(cfg)
@@ -118,6 +122,8 @@ def train(config: Optional[TrainingConfig] = None) -> None:
 
     if run is not None:
         run.finish()
+
+    return history
 
 
 def _run_epoch(
