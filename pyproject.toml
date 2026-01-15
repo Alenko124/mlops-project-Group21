@@ -19,6 +19,7 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "datasets>=4.4.2",
+    "dotenv>=0.9.9",
     "fastapi==0.115.6",
     "hydra-core>=1.3.2",
     "omegaconf>=2.3.0",
@@ -28,6 +29,7 @@ dependencies = [
     "torchvision>=0.21.0",
     "typer==0.15.1",
     "uvicorn==0.34.0",
+    "wandb>=0.24.0",
 ]
 
 [dependency-groups]
@@ -61,3 +63,6 @@ line-length = 120
 
 [tool.coverage.run]
 omit = ["tests/*"]
+
+[project.scripts]
+train = "eurosat.train:train"
