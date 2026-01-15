@@ -1,5 +1,4 @@
 import json
-import logging
 import random
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
@@ -10,12 +9,11 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
+import wandb
 from torch.profiler import ProfilerActivity, profile
 
 from eurosat.data import DataConfig, create_dataloaders
 from eurosat.model import ModelConfig, create_model
-
-logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -25,6 +23,8 @@ class TrainingConfig:
     epochs: int = 2
     lr: float = 1e-3
     weight_decay: float = 1e-4
+    optimizer: str = "adam"
+    momentum: float = 0.9
     seed: int = 42
     device: Optional[str] = None
     checkpoint_path: str = "models/resnet18_eurosat2.pt"
@@ -32,26 +32,26 @@ class TrainingConfig:
     data: DataConfig = field(default_factory=DataConfig)
     model: ModelConfig = field(default_factory=ModelConfig)
     enable_profiling: bool = True
+    enable_wandb: bool = True
+    wandb_entity: str = "lp6adi-danmarks-tekniske-universitet-dtu"
+    wandb_project: str = "eurosat"
 
 
 def train(config: Optional[TrainingConfig] = None) -> None:
     """Train a classification model using the provided configuration."""
 
     cfg = config or TrainingConfig()
-    _setup_logging()
     device = _get_device(cfg)
-    logger.info("Using device %s", device)
+    print(f"Using device: {device}")
     _set_seed(cfg.seed)
+
+    run = _setup_logging(cfg)
 
     model = create_model(cfg.model, device=device)
     train_loader, val_loader, _ = create_dataloaders(cfg.data)
 
     criterion = nn.CrossEntropyLoss()
-    optimizer = optim.Adam(
-        (param for param in model.parameters() if param.requires_grad),
-        lr=cfg.lr,
-        weight_decay=cfg.weight_decay,
-    )
+    optimizer = _create_optimizer(model, cfg)
 
     history: List[Dict[str, float]] = []
     prof = None
@@ -83,14 +83,10 @@ def train(config: Optional[TrainingConfig] = None) -> None:
             training=False,
         )
 
-        logger.info(
-            "Epoch %d/%d | Train loss %.4f acc %.4f | Val loss %.4f acc %.4f",
-            epoch + 1,
-            cfg.epochs,
-            train_loss,
-            train_acc,
-            val_loss,
-            val_acc,
+        print(
+            f"Epoch {epoch + 1}/{cfg.epochs} | "
+            f"Train loss {train_loss:.4f} acc {train_acc:.4f} | "
+            f"Val loss {val_loss:.4f} acc {val_acc:.4f}"
         )
 
         history.append(
@@ -103,11 +99,25 @@ def train(config: Optional[TrainingConfig] = None) -> None:
             }
         )
 
+        if run is not None:
+            run.log(
+                {
+                    "epoch": epoch + 1,
+                    "train_loss": train_loss,
+                    "train_acc": train_acc,
+                    "val_loss": val_loss,
+                    "val_acc": val_acc,
+                }
+            )
+
     if prof is not None:
         prof.stop()
 
     _save_checkpoint(model, cfg.checkpoint_path)
     _persist_run(cfg, history, prof)
+
+    if run is not None:
+        run.finish()
 
 
 def _run_epoch(
@@ -149,8 +159,51 @@ def _run_epoch(
     return mean_loss, accuracy
 
 
-def _setup_logging() -> None:
-    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
+def _setup_logging(config: TrainingConfig) -> Optional[wandb.sdk.wandb_run.Run]:
+    """Initialize WandB tracking if enabled."""
+    if not config.enable_wandb:
+        return None
+
+    run = wandb.init(
+        entity=config.wandb_entity,
+        project=config.wandb_project,
+        config={
+            "epochs": config.epochs,
+            "lr": config.lr,
+            "weight_decay": config.weight_decay,
+            "optimizer": config.optimizer,
+            "momentum": config.momentum,
+            "seed": config.seed,
+            "batch_size": config.data.batch_size,
+            "model_name": config.model.model_name,
+            "num_classes": config.model.num_classes,
+            "freeze_backbone": config.model.freeze_backbone,
+        },
+    )
+
+    run.define_metric("train_loss", summary="min")
+    run.define_metric("val_loss", summary="min")
+    run.define_metric("train_acc", summary="max")
+    run.define_metric("val_acc", summary="max")
+
+    return run
+
+
+def _create_optimizer(model: torch.nn.Module, config: TrainingConfig) -> torch.optim.Optimizer:
+    """Create optimizer based on configuration."""
+    trainable_params = (param for param in model.parameters() if param.requires_grad)
+
+    optimizer_name = config.optimizer.lower()
+    if optimizer_name == "adam":
+        return optim.Adam(trainable_params, lr=config.lr, weight_decay=config.weight_decay)
+    elif optimizer_name == "adamw":
+        return optim.AdamW(trainable_params, lr=config.lr, weight_decay=config.weight_decay)
+    elif optimizer_name == "sgd":
+        return optim.SGD(
+            trainable_params, lr=config.lr, weight_decay=config.weight_decay, momentum=config.momentum
+        )
+    else:
+        raise ValueError(f"Unsupported optimizer: {config.optimizer}. Choose from: adam, adamw, sgd")
 
 
 def _set_seed(seed: int) -> None:
@@ -171,7 +224,7 @@ def _save_checkpoint(model: torch.nn.Module, path: str) -> None:
     checkpoint_path = Path(path)
     checkpoint_path.parent.mkdir(parents=True, exist_ok=True)
     torch.save(model.state_dict(), checkpoint_path)
-    logger.info("Saved checkpoint to %s", checkpoint_path)
+    print(f"Saved checkpoint to {checkpoint_path}")
 
 
 def _persist_run(
@@ -192,12 +245,12 @@ def _persist_run(
     output_path = log_dir / "last_run.json"
     with output_path.open("w", encoding="utf-8") as f:
         json.dump(payload, f, indent=2)
-    logger.info("Saved run metadata to %s", output_path)
+    print(f"Saved run metadata to {output_path}")
 
     if prof is not None:
         prof_path = log_dir / "last_run_profiling.json"
         _save_profiling_stats(prof, prof_path)
-        logger.info("Saved profiling stats to %s", prof_path)
+        print(f"Saved profiling stats to {prof_path}")
 
 
 def _save_profiling_stats(prof: profile, path: Path) -> None:

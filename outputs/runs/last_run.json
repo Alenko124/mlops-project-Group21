@@ -1,9 +1,11 @@
 {
-  "timestamp": "2026-01-15T11:54:39.823914+00:00",
+  "timestamp": "2026-01-15T14:26:20.285237+00:00",
   "config": {
     "epochs": 2,
     "lr": 0.001,
     "weight_decay": 0.0001,
+    "optimizer": "adam",
+    "momentum": 0.9,
     "seed": 42,
     "device": null,
     "checkpoint_path": "models/resnet18_eurosat2.pt",
@@ -24,7 +26,10 @@
       "pretrained": true,
       "freeze_backbone": true
     },
-    "enable_profiling": true
+    "enable_profiling": true,
+    "enable_wandb": true,
+    "wandb_entity": "lp6adi-danmarks-tekniske-universitet-dtu",
+    "wandb_project": "eurosat"
   },
   "history": [
     {
