@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-01-15T09:45:00.592809",
+  "timestamp": "2026-01-15T11:54:39.823914+00:00",
   "config": {
     "epochs": 2,
     "lr": 0.001,
@@ -23,7 +23,8 @@
       "num_classes": 10,
       "pretrained": true,
       "freeze_backbone": true
-    }
+    },
+    "enable_profiling": true
   },
   "history": [
     {

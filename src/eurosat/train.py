@@ -10,9 +10,10 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
+from torch.profiler import ProfilerActivity, profile
 
-from data import DataConfig, create_dataloaders
-from model import ModelConfig, create_model
+from eurosat.data import DataConfig, create_dataloaders
+from eurosat.model import ModelConfig, create_model
 
 logger = logging.getLogger(__name__)
 
@@ -30,6 +31,7 @@ class TrainingConfig:
     log_dir: Optional[str] = "outputs/runs"
     data: DataConfig = field(default_factory=DataConfig)
     model: ModelConfig = field(default_factory=ModelConfig)
+    enable_profiling: bool = True
 
 
 def train(config: Optional[TrainingConfig] = None) -> None:
@@ -52,6 +54,17 @@ def train(config: Optional[TrainingConfig] = None) -> None:
     )
 
     history: List[Dict[str, float]] = []
+    prof = None
+    if cfg.enable_profiling:
+        activities = [ProfilerActivity.CPU]
+        if device.type == "cuda":
+            activities.append(ProfilerActivity.CUDA)
+        prof = profile(
+            activities=activities,
+            record_shapes=True,
+        )
+        prof.start()
+
     for epoch in range(cfg.epochs):
         train_loss, train_acc = _run_epoch(
             model=model,
@@ -90,8 +103,11 @@ def train(config: Optional[TrainingConfig] = None) -> None:
             }
         )
 
+    if prof is not None:
+        prof.stop()
+
     _save_checkpoint(model, cfg.checkpoint_path)
-    _persist_run(cfg, history)
+    _persist_run(cfg, history, prof)
 
 
 def _run_epoch(
@@ -158,7 +174,11 @@ def _save_checkpoint(model: torch.nn.Module, path: str) -> None:
     logger.info("Saved checkpoint to %s", checkpoint_path)
 
 
-def _persist_run(config: TrainingConfig, history: List[Dict[str, float]]) -> None:
+def _persist_run(
+    config: TrainingConfig,
+    history: List[Dict[str, float]],
+    prof: Optional[profile] = None,
+) -> None:
     if not config.log_dir:
         return
 
@@ -173,6 +193,25 @@ def _persist_run(config: TrainingConfig, history: List[Dict[str, float]]) -> Non
     with output_path.open("w", encoding="utf-8") as f:
         json.dump(payload, f, indent=2)
     logger.info("Saved run metadata to %s", output_path)
+
+    if prof is not None:
+        prof_path = log_dir / "last_run_profiling.json"
+        _save_profiling_stats(prof, prof_path)
+        logger.info("Saved profiling stats to %s", prof_path)
+
+
+def _save_profiling_stats(prof: profile, path: Path) -> None:
+    """Save profiling statistics to JSON file."""
+    stats = prof.key_averages().table(sort_by="cpu_time_total", row_limit=-1)
+    profiling_data = {
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "summary": str(stats),
+        "total_cpu_time": prof.key_averages().total_average().cpu_time_total,
+    }
+    if torch.cuda.is_available():
+        profiling_data["total_cuda_time"] = prof.key_averages().total_average().cuda_time_total
+    with path.open("w", encoding="utf-8") as f:
+        json.dump(profiling_data, f, indent=2, default=str)
 
 
 if __name__ == "__main__":
