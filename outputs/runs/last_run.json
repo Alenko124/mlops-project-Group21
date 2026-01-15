@@ -1,0 +1,44 @@
+{
+  "timestamp": "2026-01-15T09:45:00.592809",
+  "config": {
+    "epochs": 2,
+    "lr": 0.001,
+    "weight_decay": 0.0001,
+    "seed": 42,
+    "device": null,
+    "checkpoint_path": "models/resnet18_eurosat2.pt",
+    "log_dir": "outputs/runs",
+    "data": {
+      "dataset_name": "nielsr/eurosat-demo",
+      "seed": 42,
+      "test_size": 0.2,
+      "val_ratio_within_test": 0.5,
+      "sample_every": 20,
+      "batch_size": 32,
+      "num_workers": 4,
+      "pin_memory": true
+    },
+    "model": {
+      "model_name": "resnet18.a1_in1k",
+      "num_classes": 10,
+      "pretrained": true,
+      "freeze_backbone": true
+    }
+  },
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 2.0985575402224503,
+      "train_acc": 0.26944444444444443,
+      "val_loss": 1.8769109028357047,
+      "val_acc": 0.5185185185185185
+    },
+    {
+      "epoch": 2,
+      "train_loss": 1.7131630394193862,
+      "train_acc": 0.6166666666666667,
+      "val_loss": 1.547151756286621,
+      "val_acc": 0.7333333333333333
+    }
+  ]
+}
