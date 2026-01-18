@@ -37,10 +37,13 @@ def objective() -> None:
     best_val_loss = min(h["val_loss"] for h in history)
     best_val_acc = max(h["val_acc"] for h in history)
 
-    run.log({
-        "best_val_loss": best_val_loss,
-        "best_val_acc": best_val_acc,
-    })
+    run.log(
+        {
+            "best_val_loss": best_val_loss,
+            "best_val_acc": best_val_acc,
+        }
+    )
+
 
 def sweep_basic_config() -> str:
     """Define basic hyperparameter sweep for learning rate and optimizer."""

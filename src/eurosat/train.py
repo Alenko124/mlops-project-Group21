@@ -205,9 +205,7 @@ def _create_optimizer(model: torch.nn.Module, config: TrainingConfig) -> torch.o
     elif optimizer_name == "adamw":
         return optim.AdamW(trainable_params, lr=config.lr, weight_decay=config.weight_decay)
     elif optimizer_name == "sgd":
-        return optim.SGD(
-            trainable_params, lr=config.lr, weight_decay=config.weight_decay, momentum=config.momentum
-        )
+        return optim.SGD(trainable_params, lr=config.lr, weight_decay=config.weight_decay, momentum=config.momentum)
     else:
         raise ValueError(f"Unsupported optimizer: {config.optimizer}. Choose from: adam, adamw, sgd")
 

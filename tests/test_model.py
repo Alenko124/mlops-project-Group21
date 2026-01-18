@@ -3,12 +3,11 @@
 These tests verify that model creation, configuration, and forward passes work correctly.
 """
 import torch
-import pytest
 
 from eurosat.model import ModelConfig, create_model
 
-class TestCreateModel:
 
+class TestCreateModel:
     def test_model_has_classifier(self):
         """Test that the model has a classifier layer."""
         config = ModelConfig()
@@ -17,7 +16,6 @@ class TestCreateModel:
         assert hasattr(model, "get_classifier")
         classifier = model.get_classifier()
         assert classifier is not None
-
 
     def test_model_freeze_backbone(self):
         """Test that backbone parameters are frozen when freeze_backbone=True."""

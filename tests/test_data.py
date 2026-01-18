@@ -4,15 +4,18 @@ from datasets import load_dataset
 
 from eurosat.data import DataConfig, EuroSATDataset, load_eurosat_splits
 
+
 @pytest.fixture(scope="module")
 def splits():
     cfg = DataConfig(sample_every=20, num_workers=0, pin_memory=False)
     train_ds, val_ds, test_ds = load_eurosat_splits(cfg)
     return cfg, train_ds, val_ds, test_ds
 
+
 def test_length_splits_matching_total_dataset_length(dataset, splits):
     _, train_ds, val_ds, test_ds = splits
     assert len(dataset) == len(train_ds) + len(val_ds) + len(test_ds)
+
 
 def test_splits_have_expected_structure(splits):
     _, train_ds, _, _ = splits
@@ -77,21 +80,19 @@ def test_raw_dataset_total_samples():
     assert total_samples == 27000, f"Expected 27000 samples, got {total_samples}"
     print(f"\n✓ Raw dataset has {total_samples} samples")
 
+
 def test_raw_image_resolution_before_transform():
     """Test that raw images from HF have 64x64 resolution before transformation."""
     raw_dataset = load_dataset("nielsr/eurosat-demo")
     train_split = raw_dataset["train"]
-
 
     resolutions = set()
     for i in range(min(10, len(train_split))):
         sample = train_split[i]
         image = sample["image"]
 
-
         width, height = image.size
         resolutions.add((width, height))
-
 
         assert width == 64, f"Sample {i}: Expected width 64, got {width}"
         assert height == 64, f"Sample {i}: Expected height 64, got {height}"
