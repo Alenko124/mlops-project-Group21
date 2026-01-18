@@ -9,11 +9,11 @@ from eurosat.train import TrainingConfig, train
 
 def objective() -> None:
     """Training objective function for sweep.
-    
+
     WandB agent automatically sets up run context with sweep config.
     """
     run = wandb.init()
-    
+
     config = TrainingConfig(
         epochs=run.config.epochs,
         lr=run.config.lr,
@@ -33,10 +33,10 @@ def objective() -> None:
     )
 
     history = train(config)
-    
+
     best_val_loss = min(h["val_loss"] for h in history)
     best_val_acc = max(h["val_acc"] for h in history)
-    
+
     run.log({
         "best_val_loss": best_val_loss,
         "best_val_acc": best_val_acc,
@@ -90,7 +90,7 @@ def sweep_extended() -> str:
 
 def main(sweep_id: str, count: int = 5) -> None:
     """Run sweep agents.
-    
+
     Args:
         sweep_id: WandB sweep ID from sweep creation.
         count: Number of sweep iterations per agent.

@@ -19,12 +19,6 @@ class DataConfig:
     num_workers: int = 4
     pin_memory: bool = True
 
-def load_eurosat(config: DataConfig):
-    """Load EuroSAT."""
-
-    ds = load_dataset(config.dataset_name)
-    return ds
-
 def load_eurosat_splits(config: DataConfig):
     """Load and split EuroSAT into train/val/test subsets with deterministic shuffling."""
 

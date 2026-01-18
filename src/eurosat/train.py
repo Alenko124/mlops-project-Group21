@@ -39,7 +39,7 @@ class TrainingConfig:
 
 def train(config: Optional[TrainingConfig] = None) -> List[Dict[str, float]]:
     """Train a classification model using the provided configuration.
-    
+
     Returns:
         Training history with metrics for each epoch.
     """

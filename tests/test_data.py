@@ -2,14 +2,7 @@ import pytest
 import torch
 from datasets import load_dataset
 
-from eurosat.data import DataConfig, EuroSATDataset, load_eurosat, load_eurosat_splits
-
-
-@pytest.fixture(scope="module")
-def dataset():
-    cfg = DataConfig(sample_every=20, num_workers=0, pin_memory=False)
-    ds = load_eurosat(cfg)
-    return ds
+from eurosat.data import DataConfig, EuroSATDataset, load_eurosat_splits
 
 @pytest.fixture(scope="module")
 def splits():
@@ -76,11 +69,11 @@ def test_eurosat_dataset_image_normalized_range(splits):
 
 def test_raw_dataset_total_samples():
     raw_dataset = load_dataset("nielsr/eurosat-demo")
-    
+
     assert "train" in raw_dataset, "Dataset should have 'train' split"
-    
+
     total_samples = len(raw_dataset["train"])
-    
+
     assert total_samples == 27000, f"Expected 27000 samples, got {total_samples}"
     print(f"\n✓ Raw dataset has {total_samples} samples")
 
@@ -88,20 +81,20 @@ def test_raw_image_resolution_before_transform():
     """Test that raw images from HF have 64x64 resolution before transformation."""
     raw_dataset = load_dataset("nielsr/eurosat-demo")
     train_split = raw_dataset["train"]
-    
-    
+
+
     resolutions = set()
     for i in range(min(10, len(train_split))):
         sample = train_split[i]
         image = sample["image"]
-        
-       
+
+
         width, height = image.size
         resolutions.add((width, height))
-        
-        
+
+
         assert width == 64, f"Sample {i}: Expected width 64, got {width}"
         assert height == 64, f"Sample {i}: Expected height 64, got {height}"
-    
+
     assert len(resolutions) == 1, f"All images should have same resolution, got {resolutions}"
     assert (64, 64) in resolutions, f"Expected (64, 64), got {resolutions}"
