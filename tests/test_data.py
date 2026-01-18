@@ -2,8 +2,14 @@ import pytest
 import torch
 from datasets import load_dataset
 
-from eurosat.data import DataConfig, EuroSATDataset, load_eurosat_splits
+from eurosat.data import DataConfig, EuroSATDataset, load_eurosat, load_eurosat_splits
 
+
+@pytest.fixture(scope="module")
+def dataset():
+    cfg = DataConfig(sample_every=20, num_workers=0, pin_memory=False)
+    ds = load_eurosat(cfg)
+    return ds
 
 @pytest.fixture(scope="module")
 def splits():
@@ -11,6 +17,9 @@ def splits():
     train_ds, val_ds, test_ds = load_eurosat_splits(cfg)
     return cfg, train_ds, val_ds, test_ds
 
+def test_length_splits_matching_total_dataset_length(dataset, splits):
+    _, train_ds, val_ds, test_ds = splits
+    assert len(dataset) == len(train_ds) + len(val_ds) + len(test_ds)
 
 def test_splits_have_expected_structure(splits):
     _, train_ds, _, _ = splits
