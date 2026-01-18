@@ -8,10 +8,10 @@ This project will address a real-world **image classification** problem using sa
 
 The project will use the **EuroSAT** dataset, accessed via the Hugging Face Hub:
 
-- **Dataset source:** https://huggingface.co/datasets/nielsr/eurosat-demo  
-- **Data type:** RGB satellite images  
-- **Task:** Multi-class image classification  
-- **Number of classes:** 10 land-use categories  
+- **Dataset source:** https://huggingface.co/datasets/nielsr/eurosat-demo
+- **Data type:** RGB satellite images
+- **Task:** Multi-class image classification
+- **Number of classes:** 10 land-use categories
 
 The dataset will contain 27,000 RGB satellite images with a resolution of 64 × 64 pixels, representing different land-use classes such as forests, residential areas, rivers, highways, and industrial zones. Given an input satellite image, the model will predict the corresponding land-use class.
 
@@ -35,13 +35,13 @@ To improve generalization, data augmentation will be applied during training usi
 
 The project will be implemented using the following frameworks and tools:
 
-- PyTorch for model implementation and training  
-- Hugging Face `datasets` for dataset loading  
-- `timm` for pretrained image classification models  
-- Albumentations for data augmentation  
-- GitHub for collaboration  
-- Docker for reproducible environments  
-- Experiment monitoring for tracking configurations and performance  
+- PyTorch for model implementation and training
+- Hugging Face `datasets` for dataset loading
+- `timm` for pretrained image classification models
+- Albumentations for data augmentation
+- GitHub for collaboration
+- Docker for reproducible environments
+- Experiment monitoring for tracking configurations and performance
 - ...
 
 ---
