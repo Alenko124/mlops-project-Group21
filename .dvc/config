@@ -1,5 +1,8 @@
 [core]
     remote = gcsremote
+    analytics = false
+[cache]
+    type = copy
 ['remote "gcsremote"']
     url = gs://mlops-group21
     version_aware = true
