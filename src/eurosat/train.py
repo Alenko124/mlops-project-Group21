@@ -33,7 +33,7 @@ class TrainingConfig:
     model: ModelConfig = field(default_factory=ModelConfig)
     enable_profiling: bool = True
     enable_wandb: bool = True
-    wandb_entity: str = "lp6adi-danmarks-tekniske-universitet-dtu"
+    wandb_entity: str = "andrej-dtu-danmarks-tekniske-universitet-dtu"
     wandb_project: str = "eurosat"
 
 
