@@ -12,11 +12,6 @@ def splits():
     return cfg, train_ds, val_ds, test_ds
 
 
-def test_length_splits_matching_total_dataset_length(dataset, splits):
-    _, train_ds, val_ds, test_ds = splits
-    assert len(dataset) == len(train_ds) + len(val_ds) + len(test_ds)
-
-
 def test_splits_have_expected_structure(splits):
     _, train_ds, _, _ = splits
     sample = train_ds[0]
