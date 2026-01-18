@@ -1,7 +1,14 @@
 name: "Run tests"
 
+# This workflow automatically triggers on push and pull requests
+# It runs pytest to execute all tests defined in the 'tests/' directory
+# pytest automatically discovers test files matching: test_*.py or *_test.py
+
 on:
   push:
+    # Skip tests if only pre-commit config changes (prevents unnecessary re-runs from auto-commits)
+    paths-ignore:
+      - '.pre-commit-config.yaml'
   pull_request:
     branches: [ master, main ]
 
