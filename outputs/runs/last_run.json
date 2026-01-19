@@ -1,22 +1,19 @@
 {
-  "timestamp": "2026-01-15T16:07:53.333529+00:00",
+  "timestamp": "2026-01-19T12:52:16.371100+00:00",
   "config": {
-    "epochs": 2,
+    "epochs": 3,
     "lr": 0.001,
     "weight_decay": 0.0001,
     "optimizer": "adam",
     "momentum": 0.9,
     "seed": 42,
     "device": null,
-    "checkpoint_path": "models/resnet18_eurosat2.pt",
+    "checkpoint_path": "models/resnet18_eurosat4.pt",
     "log_dir": "outputs/runs",
     "data": {
-      "dataset_name": "nielsr/eurosat-demo",
-      "seed": 42,
-      "test_size": 0.2,
-      "val_ratio_within_test": 0.5,
-      "sample_every": 20,
+      "data_dir": "data/raw",
       "batch_size": 32,
+      "sample_every": 40,
       "num_workers": 4,
       "pin_memory": true
     },
@@ -28,23 +25,30 @@
     },
     "enable_profiling": true,
     "enable_wandb": true,
-    "wandb_entity": "lp6adi-danmarks-tekniske-universitet-dtu",
-    "wandb_project": "eurosat"
+    "wandb_entity": "mlopstesting",
+    "wandb_project": "s_kruh_te"
   },
   "history": [
     {
       "epoch": 1,
-      "train_loss": 2.0985575402224503,
-      "train_acc": 0.26944444444444443,
-      "val_loss": 1.8769109028357047,
-      "val_acc": 0.5185185185185185
+      "train_loss": 2.2000496846658213,
+      "train_acc": 0.2111111111111111,
+      "val_loss": 2.1562491725472843,
+      "val_acc": 0.3088235294117647
     },
     {
       "epoch": 2,
-      "train_loss": 1.7131630394193862,
-      "train_acc": 0.6166666666666667,
-      "val_loss": 1.547151756286621,
-      "val_acc": 0.7333333333333333
+      "train_loss": 1.9533715371732359,
+      "train_acc": 0.4166666666666667,
+      "val_loss": 1.952638163286097,
+      "val_acc": 0.4411764705882353
+    },
+    {
+      "epoch": 3,
+      "train_loss": 1.7667587907225997,
+      "train_acc": 0.5537037037037037,
+      "val_loss": 1.7689762956955855,
+      "val_acc": 0.5588235294117647
     }
   ]
 }
