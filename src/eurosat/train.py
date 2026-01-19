@@ -13,12 +13,80 @@ import torch.optim as optim
 import wandb
 from torch.profiler import ProfilerActivity, profile
 from typing import Optional
+import psutil, os
 from eurosat.data_dvc import DataConfig, create_dataloaders
 from eurosat.model import ModelConfig, create_model
+
+def mem(msg):
+    print(msg, psutil.Process(os.getpid()).memory_info().rss / 1024**3, "GB")
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Training configuration overrides"
+    )
+    #data
+    parser.add_argument(
+    "--data-dir",
+    type=str,
+    default=None,
+    help="Path to dataset root directory",
+    )
+
+    parser.add_argument(
+        "--data-batch-size",
+        type=int,
+        default=None,
+        help="Batch size for training",
+    )
+
+    parser.add_argument(
+        "--data-sample-every",
+        type=int,
+        default=None,
+        help="Load every N-th sample (debugging)",
+    )
+
+    parser.add_argument(
+        "--data-num-workers",
+        type=int,
+        default=None,
+        help="Number of DataLoader workers",
+    )
+
+    parser.add_argument(
+        "--data-pin-memory",
+        action=argparse.BooleanOptionalAction,
+        default=None,
+        help="Enable pin_memory in DataLoader",
+    )
+
+    #model
+    parser.add_argument(
+    "--model-name",
+    type=str,
+    default=None,
+    help="Model architecture name (e.g. resnet18.a1_in1k)",
+    )
+
+    parser.add_argument(
+        "--model-num-classes",
+        type=int,
+        default=None,
+        help="Number of output classes",
+    )
+
+    parser.add_argument(
+        "--model-pretrained",
+        action=argparse.BooleanOptionalAction,
+        default=None,
+        help="Use pretrained weights",
+    )
+
+    parser.add_argument(
+        "--model-freeze-backbone",
+        action=argparse.BooleanOptionalAction,
+        default=None,
+        help="Freeze backbone parameters",
     )
 
     # -------------------------
@@ -88,19 +156,29 @@ class TrainingConfig:
 def apply_args_to_config(
     cfg: TrainingConfig, args: argparse.Namespace
 ) -> TrainingConfig:
-    updates = {
-        k.replace("_", "-"): v
-        for k, v in vars(args).items()
-        if v is not None
-    }
+    for key, value in vars(args).items():
+        if value is None:
+            continue
 
-    return replace(
-        cfg,
-        **{
-            k.replace("-", "_"): v
-            for k, v in updates.items()
-        },
-    )
+        key = key.replace("-", "_")
+
+        # 🔹 Nested DataConfig: --data-xxx
+        if key.startswith("data_"):
+            field_name = key[len("data_") :]
+            if hasattr(cfg.data, field_name):
+                setattr(cfg.data, field_name, value)
+            else:
+                raise ValueError(f"Unknown DataConfig field: {field_name}")
+
+        # 🔹 Top-level TrainingConfig
+        elif hasattr(cfg, key):
+            setattr(cfg, key, value)
+
+        else:
+            raise ValueError(f"Unknown config field: {key}")
+
+    return cfg
+
 
 def train(config: Optional[TrainingConfig] = None) -> List[Dict[str, float]]:
     """Train a classification model using the provided configuration.
@@ -111,14 +189,18 @@ def train(config: Optional[TrainingConfig] = None) -> List[Dict[str, float]]:
     args = parse_args()
     cfg = config or TrainingConfig()
     cfg = apply_args_to_config(cfg, args)
+    print("===== FINAL TRAINING CONFIG =====")
+    print(json.dumps(asdict(cfg), indent=2))
+    print("=================================")
     device = _get_device(cfg)
     print(f"Using device: {device}")
     _set_seed(cfg.seed)
     run = _setup_logging(cfg)
 
     model = create_model(cfg.model, device=device)
+    mem("After model")
     train_loader, val_loader, _ = create_dataloaders(cfg.data)
-
+    mem("After dataloaders")
     criterion = nn.CrossEntropyLoss()
     optimizer = _create_optimizer(model, cfg)
 
@@ -181,7 +263,8 @@ def train(config: Optional[TrainingConfig] = None) -> List[Dict[str, float]]:
 
     if prof is not None:
         prof.stop()
-
+        del prof
+        prof = None
     _save_checkpoint(model, cfg.checkpoint_path)
     _persist_run(cfg, history, prof)
 
@@ -329,7 +412,8 @@ def _persist_run(
 
     if prof is not None:
         prof_path = log_dir / "last_run_profiling.json"
-        _save_profiling_stats(prof, prof_path)
+        if config.enable_profiling and prof is not None:
+            _save_profiling_stats(prof, prof_path)
         print(f"Saved profiling stats to {prof_path}")
 
 
