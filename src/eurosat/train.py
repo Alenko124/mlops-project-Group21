@@ -1,21 +1,68 @@
 import json
 import random
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass, field, replace
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 from google.cloud import storage
-
+import argparse
 import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
 import wandb
 from torch.profiler import ProfilerActivity, profile
-
+from typing import Optional
 from eurosat.data_dvc import DataConfig, create_dataloaders
 from eurosat.model import ModelConfig, create_model
 
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Training configuration overrides"
+    )
+
+    # -------------------------
+    # Core training params
+    # -------------------------
+    parser.add_argument("--epochs", type=int)
+    parser.add_argument("--lr", type=float)
+    parser.add_argument("--weight-decay", type=float)
+    parser.add_argument(
+        "--optimizer",
+        type=str,
+        choices=["adam", "sgd", "adamw"],
+    )
+    parser.add_argument("--momentum", type=float)
+    parser.add_argument("--seed", type=int)
+    parser.add_argument("--device", type=str)
+
+    # -------------------------
+    # Paths / logging
+    # -------------------------
+    parser.add_argument("--checkpoint-path", type=str)
+    parser.add_argument("--log-dir", type=str)
+
+    # -------------------------
+    # Feature toggles
+    # -------------------------
+    parser.add_argument(
+        "--enable-profiling",
+        action=argparse.BooleanOptionalAction,
+        default=None,
+    )
+    parser.add_argument(
+        "--enable-wandb",
+        action=argparse.BooleanOptionalAction,
+        default=None,
+    )
+
+    # -------------------------
+    # Weights & Biases
+    # -------------------------
+    parser.add_argument("--wandb-entity", type=str)
+    parser.add_argument("--wandb-project", type=str)
+
+    return parser.parse_args()
 
 @dataclass
 class TrainingConfig:
@@ -38,18 +85,35 @@ class TrainingConfig:
     wandb_project: str = "s_kruh_te"
 
 
+def apply_args_to_config(
+    cfg: TrainingConfig, args: argparse.Namespace
+) -> TrainingConfig:
+    updates = {
+        k.replace("_", "-"): v
+        for k, v in vars(args).items()
+        if v is not None
+    }
+
+    return replace(
+        cfg,
+        **{
+            k.replace("-", "_"): v
+            for k, v in updates.items()
+        },
+    )
+
 def train(config: Optional[TrainingConfig] = None) -> List[Dict[str, float]]:
     """Train a classification model using the provided configuration.
 
     Returns:
         Training history with metrics for each epoch.
     """
-
+    args = parse_args()
     cfg = config or TrainingConfig()
+    cfg = apply_args_to_config(cfg, args)
     device = _get_device(cfg)
     print(f"Using device: {device}")
     _set_seed(cfg.seed)
-
     run = _setup_logging(cfg)
 
     model = create_model(cfg.model, device=device)

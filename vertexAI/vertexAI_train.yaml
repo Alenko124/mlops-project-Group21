@@ -51,6 +51,7 @@ steps:
     - uv
     - --args=run
     - --args=src/eurosat/train.py
+    - --args=--epochs=20
 
 # ------------------------------------------------------------
 # Secrets (Google Secret Manager → environment variables)
