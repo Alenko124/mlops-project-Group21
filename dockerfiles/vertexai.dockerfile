@@ -33,13 +33,7 @@ COPY src/ src/
 # ---- Install Python deps ----
 RUN uv sync --frozen --no-cache
 
-# ---- Copy rest of the project ----
-#COPY . .
-
 # ---- Download compressed dataset at BUILD time ----
 RUN gsutil cp gs://mlops-group21/compressed/data.tar.gz . \
  && tar -xzf data.tar.gz \
  && rm data.tar.gz
-
-# ---- Run training ----
-CMD ["uv", "run", "src/eurosat/train.py"]

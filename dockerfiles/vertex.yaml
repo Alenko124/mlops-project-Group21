@@ -5,15 +5,15 @@ steps:
     'build',
     '.',
     '-t',
-    'europe-west1-docker.pkg.dev/$PROJECT_ID/mlops-group21/eurosat',
+    'europe-west1-docker.pkg.dev/$PROJECT_ID/mlops-group21/vertexai',
     '-f',
-    'dockerfiles/train.dockerfile'
+    'dockerfiles/vertexai.dockerfile'
   ]
 - name: 'gcr.io/cloud-builders/docker'
   id: 'Push container image'
   args: [
     'push',
-    'europe-west1-docker.pkg.dev/$PROJECT_ID/mlops-group21/eurosat'
+    'europe-west1-docker.pkg.dev/$PROJECT_ID/mlops-group21/vertexai'
   ]
 options:
   logging: CLOUD_LOGGING_ONLY

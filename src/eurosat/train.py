@@ -4,6 +4,7 @@ from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
+from google.cloud import storage
 
 import numpy as np
 import torch
@@ -12,7 +13,7 @@ import torch.optim as optim
 import wandb
 from torch.profiler import ProfilerActivity, profile
 
-from eurosat.data import DataConfig, create_dataloaders
+from eurosat.data_dvc import DataConfig, create_dataloaders
 from eurosat.model import ModelConfig, create_model
 
 
@@ -27,14 +28,14 @@ class TrainingConfig:
     momentum: float = 0.9
     seed: int = 42
     device: Optional[str] = None
-    checkpoint_path: str = "models/resnet18_eurosat2.pt"
+    checkpoint_path: str = "models/resnet18_eurosat4.pt"
     log_dir: Optional[str] = "outputs/runs"
     data: DataConfig = field(default_factory=DataConfig)
     model: ModelConfig = field(default_factory=ModelConfig)
     enable_profiling: bool = True
     enable_wandb: bool = True
-    wandb_entity: str = "andrej-dtu-danmarks-tekniske-universitet-dtu"
-    wandb_project: str = "eurosat"
+    wandb_entity: str = "mlopstesting"
+    wandb_project: str = "s_kruh_te"
 
 
 def train(config: Optional[TrainingConfig] = None) -> List[Dict[str, float]]:
@@ -229,6 +230,17 @@ def _save_checkpoint(model: torch.nn.Module, path: str) -> None:
     checkpoint_path.parent.mkdir(parents=True, exist_ok=True)
     torch.save(model.state_dict(), checkpoint_path)
     print(f"Saved checkpoint to {checkpoint_path}")
+
+    # ---- Upload to GCS ----
+    bucket_name = "mlops-group21"
+    gcs_path = f"models/{checkpoint_path.name}"
+
+    client = storage.Client()
+    bucket = client.bucket(bucket_name)
+    blob = bucket.blob(gcs_path)
+
+    blob.upload_from_filename(str(checkpoint_path))
+    print(f"☁️ Uploaded checkpoint to gs://{bucket_name}/{gcs_path}")
 
 
 def _persist_run(
