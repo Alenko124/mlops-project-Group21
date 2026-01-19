@@ -1,7 +1,7 @@
 {
-  "timestamp": "2026-01-19T12:52:16.371100+00:00",
+  "timestamp": "2026-01-19T16:00:49.866370+00:00",
   "config": {
-    "epochs": 3,
+    "epochs": 1,
     "lr": 0.001,
     "weight_decay": 0.0001,
     "optimizer": "adam",
@@ -14,8 +14,8 @@
       "data_dir": "data/raw",
       "batch_size": 32,
       "sample_every": 40,
-      "num_workers": 4,
-      "pin_memory": true
+      "num_workers": 2,
+      "pin_memory": false
     },
     "model": {
       "model_name": "resnet18.a1_in1k",
@@ -23,7 +23,7 @@
       "pretrained": true,
       "freeze_backbone": true
     },
-    "enable_profiling": true,
+    "enable_profiling": false,
     "enable_wandb": true,
     "wandb_entity": "mlopstesting",
     "wandb_project": "s_kruh_te"
@@ -35,20 +35,6 @@
       "train_acc": 0.2111111111111111,
       "val_loss": 2.1562491725472843,
       "val_acc": 0.3088235294117647
-    },
-    {
-      "epoch": 2,
-      "train_loss": 1.9533715371732359,
-      "train_acc": 0.4166666666666667,
-      "val_loss": 1.952638163286097,
-      "val_acc": 0.4411764705882353
-    },
-    {
-      "epoch": 3,
-      "train_loss": 1.7667587907225997,
-      "train_acc": 0.5537037037037037,
-      "val_loss": 1.7689762956955855,
-      "val_acc": 0.5588235294117647
     }
   ]
 }

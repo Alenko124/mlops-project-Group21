@@ -51,7 +51,10 @@ steps:
     - uv
     - --args=run
     - --args=src/eurosat/train.py
-    - --args=--epochs=20
+    - --args=--epochs=30
+    - --args=--no-enable-profiling
+    - --args=--data-sample-every=1
+    - --args=--data-batch-size=64
 
 # ------------------------------------------------------------
 # Secrets (Google Secret Manager → environment variables)

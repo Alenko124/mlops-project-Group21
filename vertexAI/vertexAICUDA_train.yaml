@@ -1,0 +1,66 @@
+steps:
+# ------------------------------------------------------------
+# 1) Replace environment variables in Vertex AI config.yaml
+#    using envsubst (e.g. WANDB_API_KEY)
+# ------------------------------------------------------------
+- name: "alpine"
+  id: "Replace values in the training config"
+  entrypoint: "sh"
+  args:
+    - "-c"
+    - |
+      apk add --no-cache gettext
+      envsubst < vertexAI/config.yaml > vertexAI/config.yaml.tmp
+      mv vertexAI/config.yaml.tmp vertexAI/config.yaml
+  secretEnv:
+    - WANDB_API_KEY
+
+# ------------------------------------------------------------
+# 2) (DEBUG) Print the final config.yaml
+#    ❗ REMOVE IN PRODUCTION (prints secrets to logs)
+# ------------------------------------------------------------
+- name: "alpine"
+  id: "Show config"
+  waitFor:
+    - "Replace values in the training config"
+  entrypoint: "sh"
+  args:
+    - "-c"
+    - |
+      echo "===== FINAL CONFIG.YAML ====="
+      cat vertexAI/config.yaml
+
+# ------------------------------------------------------------
+# 3) Run Vertex AI Custom Training Job
+# ------------------------------------------------------------
+- name: "gcr.io/cloud-builders/gcloud"
+  id: "Run training on Vertex AI"
+  waitFor:
+    - "Replace values in the training config"
+  args:
+    - ai
+    - custom-jobs
+    - create
+    - --region
+    - europe-west1
+    - --display-name
+    - resnet18-eurosat-train
+    - --config
+    - vertexAI/config.yaml
+    - --command
+    - uv
+    - --args=run
+    - --args=src/eurosat/train.py
+    - --args=--epochs=30
+    - --args=--no-enable-profiling
+    - --args=--data-sample-every=1
+    - --args=--data-batch-size=64
+    - --args=--device=cuda
+
+# ------------------------------------------------------------
+# Secrets (Google Secret Manager → environment variables)
+# ------------------------------------------------------------
+availableSecrets:
+  secretManager:
+    - versionName: projects/$PROJECT_ID/secrets/WANDB_API_KEY/versions/latest
+      env: WANDB_API_KEY
