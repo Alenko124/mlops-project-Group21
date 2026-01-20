@@ -8,10 +8,11 @@ import torch
 import torchvision.transforms as transforms
 from PIL import Image
 
+# Import from project structure
 try:
     from eurosat.model import create_model, ModelConfig
 except ImportError:
-    # Bu hack demo ortamında gereklidir
+    # This hack is necessary for the demo environment to find the src module
     sys.path.append(str(Path(__file__).parent / "src"))
     from eurosat.model import create_model, ModelConfig
 
@@ -22,14 +23,13 @@ st.set_page_config(page_title="EuroSAT Classifier", page_icon="🛰️")
 @st.cache_resource
 def load_model(model_path="models/model.pth"):
     """Loads the trained model with caching to speed up reloads."""
-    # TODO: Prod ortamında config parametrelerini config.json'dan okumalıyız.
-    # Şimdilik demo için default değerleri kullanıyoruz.
+    # TODO: In production, config parameters should be read from config.json.
+    # Using default values for the demo.
     cfg = ModelConfig()
     model = create_model(cfg)
 
     # Check if weights exist
     if os.path.exists(model_path):
-
         state_dict = torch.load(model_path, map_location=torch.device("cpu"))
         model.load_state_dict(state_dict)
         print(f"Model loaded from {model_path}")
@@ -53,7 +53,7 @@ def process_image(image):
 
 
 # --- UI Layout ---
-st.title("EuroSAT Land Use Classification")
+st.title("🛰️ EuroSAT Land Use Classification")
 st.markdown("Upload a satellite image to classify its land use type.")
 
 # Sidebar
@@ -63,7 +63,6 @@ st.sidebar.text("Dataset: EuroSAT")
 st.sidebar.markdown("---")
 
 uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "png", "jpeg"])
-
 
 classes = [
     "AnnualCrop",
@@ -102,14 +101,13 @@ if uploaded_file is not None:
             st.success(f"Prediction: **{prediction}**")
             st.info(f"Confidence: {conf.item():.2%}")
 
-
+    # Visualization of probabilities
     st.subheader("Class Probabilities")
-    
-    # Create a simple dataframe for the chart
+
     chart_data = pd.DataFrame(
         {"Class": classes, "Probability": probs.numpy()}
     ).set_index("Class")
-    
+
     st.bar_chart(chart_data)
 
 else:
