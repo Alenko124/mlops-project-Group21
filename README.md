@@ -49,3 +49,54 @@ The project will be implemented using the following frameworks and tools:
 ## Course Features
 
 All experiments will be executed in a reproducible environment. A Docker container will be used to ensure consistent dependencies across systems, and the `uv` package manager will be used for dependency and environment management. Training configurations and experimental results will be logged to enable reproducibility and systematic comparison. In addition, the project will incorporate relevant features and techniques introduced during the course as they are learned and become applicable.
+
+## Project Architecture
+
+The diagram below illustrates the MLOps pipeline implemented in this project, covering data versioning, cloud training, and deployment.
+
+```mermaid
+graph TD
+    %% Actors
+    Dev[Developer]
+    User[End User]
+
+    %% Subgraph: Development & CI/CD
+    subgraph Development_Environment
+        Repo[GitHub Repository]
+        Actions[GitHub Actions / CI]
+        DVC[DVC Data Versioning]
+    end
+
+    %% Subgraph: Google Cloud Platform
+    subgraph Google_Cloud_Platform
+        GCS[("Google Cloud Storage (GCS)")]
+        Build[Cloud Build]
+        Vertex[Vertex AI Training]
+    end
+
+    %% Subgraph: Inference
+    subgraph Serving_Layer
+        ModelReg[Model Registry / Bucket]
+        FastAPI[FastAPI Inference Service]
+        Streamlit[Streamlit Frontend]
+    end
+
+    %% Flows
+    Dev -->|Push Code| Repo
+    Repo -->|Trigger| Actions
+    Repo -->|Trigger via cloudbuild.yaml| Build
+    
+    %% Data Flow
+    DVC -->|Pull Data| GCS
+    GCS -->|Raw Data| Vertex
+    
+    %% Training Flow
+    Build -->|Submit Job| Vertex
+    Vertex -->|Train Model| Vertex
+    Vertex -->|Save Artifacts| ModelReg
+    
+    %% Serving Flow
+    ModelReg -->|Load Model| FastAPI
+    User -->|Upload Image| Streamlit
+    Streamlit -->|API Request| FastAPI
+    FastAPI -->|Prediction| Streamlit
