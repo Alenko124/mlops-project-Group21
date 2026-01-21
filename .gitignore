@@ -6,6 +6,10 @@ manual_test/
 # other local dev info
 .vscode/
 
+# Compressed data archives (managed via DVC)
+data.tar.gz
+google-cloud-cli-linux-x86_64.tar.gz
+
 # Mac OS-specific storage files
 .DS_Store
 
@@ -144,6 +148,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+google-cloud-sdk/
 
 # Spyder project settings
 .spyderproject
