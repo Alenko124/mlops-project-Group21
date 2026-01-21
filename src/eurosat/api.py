@@ -2,7 +2,6 @@
 
 from contextlib import asynccontextmanager
 from io import BytesIO
-from typing import Optional
 
 import torch
 import timm
@@ -87,9 +86,9 @@ async def lifespan(app: FastAPI):
 
     print("Loading model from Google Cloud Storage...")
     try:
-        # BUCKET AND MODEL PATH 
-        bucket_name = "mlops-group21" 
-        model_path = "models/resnet18_eurosat4.pt" 
+        # BUCKET AND MODEL PATH
+        bucket_name = "mlops-group21"
+        model_path = "models/resnet18_eurosat4.pt"
 
         model = load_model_from_gcs(bucket_name, model_path)
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -137,11 +136,9 @@ async def predict(file: UploadFile = File(...)):
         contents = await file.read()
         image = Image.open(BytesIO(contents))
 
-        
         if image.mode != "RGB":
             image = image.convert("RGB")
 
-        
         image_tensor = transform(image).unsqueeze(0).to(device)
 
         # Inference
@@ -149,7 +146,6 @@ async def predict(file: UploadFile = File(...)):
             outputs = model(image_tensor)
             probabilities = torch.softmax(outputs, dim=1)
 
-        
         confidence, predicted_class = torch.max(probabilities, dim=1)
         confidence = confidence.item()
         predicted_class = predicted_class.item()
