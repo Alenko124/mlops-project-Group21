@@ -7,6 +7,9 @@ on:
     paths:
     - '**/*.dvc'
     - '.dvc/**'
+  #   - master
+  # workflow_dispatch:
+
 
 jobs:
   run_data_checker:
