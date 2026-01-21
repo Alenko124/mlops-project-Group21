@@ -4,11 +4,11 @@ on:
   pull_request:
     branches:
     - main
-    paths:
-    - '**/*.dvc'
-    - '.dvc/**'
-  #   - master
-  # workflow_dispatch:
+    # paths:
+    # - '**/*.dvc'
+    # - '.dvc/**'
+    - master
+  workflow_dispatch:
 
 
 jobs:
