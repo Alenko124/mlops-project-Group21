@@ -1,0 +1,32 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  id: 'Build API container image'
+  args: [
+    'build',
+    '.',
+    '-t',
+    'europe-west1-docker.pkg.dev/$PROJECT_ID/mlops-group21/eurosat-api',
+    '-f',
+    'dockerfiles/api.dockerfile'
+  ]
+- name: 'gcr.io/cloud-builders/docker'
+  id: 'Push API container image'
+  args: [
+    'push',
+    'europe-west1-docker.pkg.dev/$PROJECT_ID/mlops-group21/eurosat-api'
+  ]
+- name: 'gcr.io/cloud-builders/gcloud'
+  id: 'Deploy to Cloud Run'
+  args: [
+    'run',
+    'deploy',
+    'eurosat-api',
+    '--image',
+    'europe-west1-docker.pkg.dev/$PROJECT_ID/mlops-group21/eurosat-api',
+    '--region',
+    'europe-west1',
+    '--platform',
+    'managed'
+  ]
+options:
+  logging: CLOUD_LOGGING_ONLY
