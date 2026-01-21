@@ -31,14 +31,14 @@ jobs:
         uv sync
         uv pip list
 
-    - name: Auth with GCP
-      uses: google-github-actions/auth@v2
-      with:
-        credentials_json: ${{ secrets.GCP_SA_KEY }}
+    # - name: Auth with GCP
+    #   uses: google-github-actions/auth@v2
+    #   with:
+    #     credentials_json: ${{ secrets.GCP_SA_KEY }}
 
-    - name: Pull data
-      run: |
-        uv run dvc pull --no-run-cache
+    # - name: Pull data
+    #   run: |
+    #     uv run dvc pull --no-run-cache
 
     - name: Check data statistics & generate report
       run: |
