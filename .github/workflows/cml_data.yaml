@@ -67,6 +67,8 @@ jobs:
 
     - name: Setup CML
       uses: iterative/setup-cml@v2
+      env:
+        REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Comment PR with dataset statistics
       env:
