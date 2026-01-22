@@ -1,0 +1,24 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: eurosat-api
+  annotations:
+    run.googleapis.com/launch-stage: ALPHA
+
+spec:
+  template:
+    metadata:
+      annotations:
+        run.googleapis.com/execution-environment: gen2
+        run.googleapis.com/cpu-throttling: "false"
+        run.googleapis.com/container-dependencies: '{"collector":["app"]}'
+    spec:
+      containers:
+        - name: app
+          image: europe-west1-docker.pkg.dev/sapient-cycling-484413-u2/mlops-group21/eurosat-api:latest
+          ports:
+            - containerPort: 8080
+
+
+        - name: collector
+          image: us-docker.pkg.dev/cloud-ops-agents-artifacts/cloud-run-gmp-sidecar/cloud-run-gmp-sidecar:1.2.0
