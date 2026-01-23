@@ -361,13 +361,12 @@ Link to dockerfile: dockerfiles/train.dockerfile
 >
 > Recommended answer length: 100-200 words.
 >
-> Example:
-> *Debugging method was dependent on group member. Some just used ... and others used ... . We did a single profiling*
-> *run of our main code at some point that showed ...*
->
 > Answer:
+>
+> For debugging, we used standard Python debugging approaches including print statements, logging, and running code interactively. The outputs folder contains run logs that helped track down issues. The test_logging.py file suggests we implemented proper logging infrastructure.
+We did profile our code - the outputs/runs/last_run_profiling.json file indicates profiling was performed. No code is perfect, and profiling helped identify bottlenecks in data loading and model training. This information was valuable for optimizing training performance, especially when scaling to cloud infrastructure.
+> 
 
---- question 16 fill here ---
 
 ## Working in the cloud
 
