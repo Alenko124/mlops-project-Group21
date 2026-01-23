@@ -130,6 +130,24 @@ def parse_args() -> argparse.Namespace:
     # -------------------------
     parser.add_argument("--wandb-entity", type=str)
     parser.add_argument("--wandb-project", type=str)
+    parser.add_argument(
+        "--wandb-registry-name",
+        type=str,
+        default=None,
+        help="W&B model registry name",
+    )
+    parser.add_argument(
+        "--wandb-collection-name",
+        type=str,
+        default=None,
+        help="W&B model registry collection name",
+    )
+    parser.add_argument(
+        "--wandb-registry-alias",
+        type=str,
+        default=None,
+        help="W&B model registry alias when loading (e.g. 'latest', 'v1', 'v0')",
+    )
 
     return parser.parse_args()
 
@@ -138,7 +156,7 @@ def parse_args() -> argparse.Namespace:
 class TrainingConfig:
     """Configuration for model training."""
 
-    epochs: int = 2
+    epochs: int = 7
     lr: float = 1e-3
     weight_decay: float = 1e-4
     optimizer: str = "adam"
@@ -151,8 +169,11 @@ class TrainingConfig:
     model: ModelConfig = field(default_factory=ModelConfig)
     enable_profiling: bool = True
     enable_wandb: bool = True
-    wandb_entity: str = "mlopstesting"
-    wandb_project: str = "s_kruh_te"
+    wandb_entity: str = "lp6adi-danmarks-tekniske-universitet-dtu"
+    wandb_project: str = "eurosat"
+    wandb_registry_name: str = "eurosat_models_registry"
+    wandb_collection_name: str = "Eurosat_models_collection"
+    wandb_registry_alias: str = "v2"
 
 
 def apply_args_to_config(cfg: TrainingConfig, args: argparse.Namespace) -> TrainingConfig:
@@ -205,6 +226,7 @@ def train(config: Optional[TrainingConfig] = None) -> List[Dict[str, float]]:
     optimizer = _create_optimizer(model, cfg)
 
     history: List[Dict[str, float]] = []
+    best_val_acc = 0.0
     prof = None
     if cfg.enable_profiling:
         activities = [ProfilerActivity.CPU]
@@ -261,14 +283,29 @@ def train(config: Optional[TrainingConfig] = None) -> List[Dict[str, float]]:
                 }
             )
 
+        # Save checkpoint if this is the best model so far
+        if val_acc > best_val_acc:
+            best_val_acc = val_acc
+            _save_checkpoint(model, cfg.checkpoint_path)
+            print(f"✓ New best model saved with val_acc={val_acc:.4f}")
+
     if prof is not None:
         prof.stop()
         del prof
         prof = None
-    _save_checkpoint(model, cfg.checkpoint_path)
     _persist_run(cfg, history, prof)
 
     if run is not None:
+        # Load the best checkpoint before logging
+        model.load_state_dict(torch.load(cfg.checkpoint_path, map_location=device))
+        print(f"✓ Loaded best checkpoint from {cfg.checkpoint_path}")
+        _log_model_artifact(
+            checkpoint_path=cfg.checkpoint_path,
+            run=run,
+            history=history,
+            registry_name=cfg.wandb_registry_name,
+            collection_name=cfg.wandb_collection_name,
+        )
         run.finish()
 
     return history
@@ -390,6 +427,35 @@ def _save_checkpoint(model: torch.nn.Module, path: str) -> None:
     # print(f"☁️ Uploaded checkpoint to gs://{bucket_name}/{gcs_path}")
 
 
+def _log_model_artifact(
+    checkpoint_path: str,
+    run: wandb.sdk.wandb_run.Run,
+    history: List[Dict[str, float]],
+    registry_name: str,
+    collection_name: str,
+) -> None:
+    final_metrics = history[-1] if history else {}
+
+    artifact = wandb.Artifact(
+        name=collection_name,
+        type="model",
+        metadata={
+            "val_acc": final_metrics.get("val_acc"),
+            "epochs": len(history),
+        },
+    )
+
+    artifact.add_file(checkpoint_path)
+    run.log_artifact(artifact)
+
+    # 🔑 THIS puts it into the registry
+    run.link_artifact(
+        artifact,
+        target_path=f"wandb-registry-{registry_name}/{collection_name}",
+        aliases=["latest"],
+    )
+
+
 def _persist_run(
     config: TrainingConfig,
     history: List[Dict[str, float]],
@@ -431,5 +497,67 @@ def _save_profiling_stats(prof: profile, path: Path) -> None:
         json.dump(profiling_data, f, indent=2, default=str)
 
 
+def load_model_from_registry(
+    alias: Optional[str] = None,
+    config: Optional[TrainingConfig] = None,
+) -> float:
+    cfg = config or TrainingConfig()
+    alias = alias or cfg.wandb_registry_alias
+    device = _get_device(cfg)
+
+    artifact_path = f"{cfg.wandb_entity}/" f"{cfg.wandb_project}/" f"{cfg.wandb_collection_name}:{alias}"
+
+    print("\n📦 Loading model from W&B Model Registry")
+    print(f"  Artifact: {artifact_path}")
+
+    try:
+        run = wandb.init(
+            entity=cfg.wandb_entity,
+            project=cfg.wandb_project,
+            job_type="inference",
+            reinit=True,
+        )
+        artifact = run.use_artifact(artifact_path, type="model")
+        artifact_dir = Path(artifact.download())
+        run.finish()
+
+        print("  ✓ Artifact downloaded")
+
+    except Exception as e:
+        print(f"  ✗ Failed to load artifact: {type(e).__name__}: {e}")
+        return 0.0
+
+    checkpoint_name = Path(cfg.checkpoint_path).name
+    checkpoint_file = artifact_dir / checkpoint_name
+
+    if not checkpoint_file.exists():
+        raise FileNotFoundError(
+            f"Checkpoint '{checkpoint_name}' not found in artifact contents: " f"{list(artifact_dir.iterdir())}"
+        )
+
+    model = create_model(cfg.model, device=device)
+    state_dict = torch.load(checkpoint_file, map_location=device)
+    model.load_state_dict(state_dict)
+    model.eval()
+
+    print("  ✓ Model weights loaded")
+
+    _, _, test_loader = create_dataloaders(cfg.data)
+    criterion = nn.CrossEntropyLoss()
+
+    test_loss, test_acc = _run_epoch(
+        model=model,
+        loader=test_loader,
+        criterion=criterion,
+        optimizer=None,
+        device=device,
+        training=False,
+    )
+
+    print(f"  ✓ Test results — loss: {test_loss:.4f}, acc: {test_acc:.4f}\n")
+    return test_acc
+
+
 if __name__ == "__main__":
     train()
+    load_model_from_registry()

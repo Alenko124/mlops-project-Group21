@@ -1,7 +1,7 @@
 {
-  "timestamp": "2026-01-21T14:23:40.296994+00:00",
+  "timestamp": "2026-01-23T17:40:45.494722+00:00",
   "config": {
-    "epochs": 2,
+    "epochs": 7,
     "lr": 0.001,
     "weight_decay": 0.0001,
     "optimizer": "adam",
@@ -26,7 +26,10 @@
     "enable_profiling": true,
     "enable_wandb": true,
     "wandb_entity": "lp6adi-danmarks-tekniske-universitet-dtu",
-    "wandb_project": "eurosat"
+    "wandb_project": "eurosat",
+    "wandb_registry_name": "eurosat_models_registry",
+    "wandb_collection_name": "Eurosat_models_collection",
+    "wandb_registry_alias": "v2"
   },
   "history": [
     {
@@ -42,6 +45,41 @@
       "train_acc": 0.4166666666666667,
       "val_loss": 1.9526383315815645,
       "val_acc": 0.4411764705882353
+    },
+    {
+      "epoch": 3,
+      "train_loss": 1.7667588039680764,
+      "train_acc": 0.5537037037037037,
+      "val_loss": 1.7689762956955855,
+      "val_acc": 0.5588235294117647
+    },
+    {
+      "epoch": 4,
+      "train_loss": 1.6093417794616134,
+      "train_acc": 0.6592592592592592,
+      "val_loss": 1.6308451961068546,
+      "val_acc": 0.6470588235294118
+    },
+    {
+      "epoch": 5,
+      "train_loss": 1.5032427187319155,
+      "train_acc": 0.6611111111111111,
+      "val_loss": 1.5174308664658491,
+      "val_acc": 0.6617647058823529
+    },
+    {
+      "epoch": 6,
+      "train_loss": 1.3960630160790903,
+      "train_acc": 0.7074074074074074,
+      "val_loss": 1.4367119424483354,
+      "val_acc": 0.6323529411764706
+    },
+    {
+      "epoch": 7,
+      "train_loss": 1.3244833513542458,
+      "train_acc": 0.725925925925926,
+      "val_loss": 1.3707890861174639,
+      "val_acc": 0.7058823529411765
     }
   ]
 }
