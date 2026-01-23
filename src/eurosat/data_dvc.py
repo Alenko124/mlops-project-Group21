@@ -92,6 +92,18 @@ def create_dataloaders(
         root / "test",
         transform=AlbumentationsTransform(eval_tf),
     )
+    train_ds = ImageFolder(
+        root / "train",
+        transform=AlbumentationsTransform(train_tf),
+    )
+    val_ds = ImageFolder(
+        root / "val",
+        transform=AlbumentationsTransform(eval_tf),
+    )
+    test_ds = ImageFolder(
+        root / "test",
+        transform=AlbumentationsTransform(eval_tf),
+    )
 
     # Subsampling
     train_ds = subsample_dataset(train_ds, config.sample_every)

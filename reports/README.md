@@ -148,7 +148,15 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 3 fill here ---
+Yes, we used several open-source frameworks and packages that were not explicitly covered in the course, and they helped us complete the project:
+
+- **Albumentations** – Used for image data augmentation during training. It helped improve model generalization by applying efficient and flexible computer vision transformations.
+
+- **Hugging Face Datasets** – Used to download and manage the EuroSAT. It simplified dataset loading, preprocessing, and dataset splitting.
+
+- **timm** – Used to load a pre-trained image classification model. It enabled efficient transfer learning by providing well-tested architectures.
+
+
 
 ## Coding environment
 
