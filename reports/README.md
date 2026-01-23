@@ -229,9 +229,6 @@ We implemented unit tests located in the tests directory. The tests covered the 
 >
 > Recommended answer length: 100-200 words.
 >
-> Example:
-> *We made use of both branches and PRs in our project. In our group, each member had an branch that they worked on in*
-> *addition to the main branch. To merge code we ...*
 >
 > Answer:
 
@@ -246,10 +243,6 @@ We enforced a frequent commit and PR cadence to keep the codebase up-to-date and
 >
 > Recommended answer length: 100-200 words.
 >
-> Example:
-> *We did make use of DVC in the following way: ... . In the end it helped us in ... for controlling ... part of our*
-> *pipeline*
->
 > Answer:
 >
 > Yes, we used DVC for data version control. The presence of data.dvc, .dvc folder, and .dvcignore file in the repository confirms this. DVC helped us track changes to the EuroSAT dataset without storing large image files in Git. It allowed us to version control data transformations and preprocessing steps, ensuring reproducibility. DVC also enabled efficient data sharing among team members by storing data remotely in Google Cloud Storage buckets while keeping lightweight pointers in Git. This separation of code and data version control improved workflow efficiency and made it easy to sync datasets across different environments.
@@ -261,11 +254,6 @@ We enforced a frequent commit and PR cadence to keep the codebase up-to-date and
 > **to insert a link to one of your GitHub actions workflow.**
 >
 > Recommended answer length: 200-300 words.
->
-> Example:
-> *We have organized our continuous integration into 3 separate files: one for doing ..., one for running ... testing*
-> *and one for running ... . In particular for our ..., we used ... .An example of a triggered workflow can be seen*
-> *here: <weblink>*
 >
 > Answer:
 
@@ -289,8 +277,6 @@ Unfortunately, we did not implement a model-level continuous integration workflo
 >
 > Recommended answer length: 50-100 words.
 >
-> Example:
-> *We used a simple argparser, that worked in the following way: Python  my_script.py --lr 1e-3 --batch_size 25*
 >
 > Answer:
 
@@ -308,10 +294,6 @@ This approach allows both reproducible defaults and quick experimentation. All c
 > **is lost when running experiments and that your experiments are reproducible?**
 >
 > Recommended answer length: 100-200 words.
->
-> Example:
-> *We made use of config files. Whenever an experiment is run the following happens: ... . To reproduce an experiment*
-> *one would have to do ...*
 >
 > Answer:
 
@@ -332,9 +314,6 @@ We established a robust framework for reproducible iteration through configurati
 >
 > Recommended answer length: 200-300 words + 1 to 3 screenshots.
 >
-> Example:
-> *As seen in the first image when have tracked ... and ... which both inform us about ... in our experiments.*
-> *As seen in the second image we are also tracking ... and ...*
 >
 > Answer:
 ![wandbA](figures/hyperparameter_sweep.png)
@@ -360,13 +339,20 @@ Overall, W&B enabled structured experiment tracking, easy comparison of multiple
 >
 > Recommended answer length: 100-200 words.
 >
-> Example:
-> *For our project we developed several images: one for training, inference and deployment. For example to run the*
-> *training docker image: `docker run trainer:latest lr=1e-3 batch_size=64`. Link to docker file: <weblink>*
 >
 > Answer:
 
---- question 15 fill here ---
+> We developed multiple Docker images for different purposes:
+
+train.dockerfile - For local training experiments
+vertexai.dockerfile / vertexaicuda.dockerfile - For cloud training on Vertex AI with optional GPU support
+api.dockerfile - For deploying the inference service
+
+To run the training Docker image locally:
+bashdocker build -f dockerfiles/train.dockerfile -t eurosat-trainer .
+docker run eurosat-trainer
+For Vertex AI training, we used configurations in vertex.yaml and vertexcuda.yaml which specify the container image and machine types. The cloudbuild.yaml file automates Docker image building and pushing to Artifact Registry. Docker ensured reproducibility by packaging all dependencies and eliminating environment-specific issues.
+Link to dockerfile: dockerfiles/train.dockerfile
 
 ### Question 16
 
