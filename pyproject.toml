@@ -18,6 +18,7 @@ classifiers = [
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "albumentations>=2.0.8",
     "datasets>=4.4.2",
     "dotenv>=0.9.9",
     "dvc>=3.65.0",
