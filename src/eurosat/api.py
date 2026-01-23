@@ -5,11 +5,11 @@ from io import BytesIO
 
 import torch
 import timm
-from fastapi import FastAPI, File, UploadFile, HTTPException
+from fastapi import FastAPI, File, UploadFile, HTTPException, Response
 from google.cloud import storage
 from PIL import Image
 from torchvision import transforms
-
+from prometheus_client import Counter, Histogram, Summary, make_asgi_app, CollectorRegistry, generate_latest, CONTENT_TYPE_LATEST
 
 model = None
 device = None
@@ -26,6 +26,13 @@ class_names = [
     "River",
     "Sea Lake",
 ]
+
+# Define Prometheus metrics
+MY_REGISTRY = CollectorRegistry()
+error_counter = Counter('error_counter', 'Error counter', registry=MY_REGISTRY)
+request_counter = Counter("prediction_requests", "Number of prediction requests", registry=MY_REGISTRY)
+request_latency = Histogram("prediction_latency_seconds", "Prediction latency in seconds", registry=MY_REGISTRY)
+prediction_by_class = Counter("prediction_by_class_total", "Number of predictions per EuroSAT class", ["class_name"], registry=MY_REGISTRY)
 
 
 def load_model_from_gcs(bucket_name: str, model_path: str) -> torch.nn.Module:
@@ -86,9 +93,9 @@ async def lifespan(app: FastAPI):
 
     print("Loading model from Google Cloud Storage...")
     try:
-        # BUCKET AND MODEL PATH
-        bucket_name = "mlops-group21"
-        model_path = "models/resnet18_eurosat4.pt"
+        # BUCKET AND MODEL PATH 
+        bucket_name = "mlops-group21" 
+        model_path = "models/resnet18_eurosat_latest.pt"
 
         model = load_model_from_gcs(bucket_name, model_path)
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -109,6 +116,7 @@ app = FastAPI(
     description="API for classifying satellite images using ResNet18 trained on EuroSAT",
     version="1.0.0",
     lifespan=lifespan,
+    redirect_slashes=False
 )
 
 
@@ -117,59 +125,61 @@ async def health_check():
     """Health check endpoint."""
     return {"status": "healthy", "model_loaded": model is not None}
 
+@app.get("/metrics", include_in_schema=False)
+def metrics():
+    return Response(
+        generate_latest(MY_REGISTRY),
+        media_type=CONTENT_TYPE_LATEST,
+    )
 
 @app.post("/predict")
 async def predict(file: UploadFile = File(...)):
-    """Classify a satellite image.
-
-    Args:
-        file: Image file to classify (JPEG, PNG, etc.)
-
-    Returns:
-        Dictionary with predictions, confidence scores, and class names
-    """
+    """Classify a satellite image."""
     if model is None:
         raise HTTPException(status_code=503, detail="Model not loaded")
 
+    request_counter.inc()
+
     try:
-        # Read image
-        contents = await file.read()
-        image = Image.open(BytesIO(contents))
+        with request_latency.time():
+            contents = await file.read()
+            image = Image.open(BytesIO(contents))
 
-        if image.mode != "RGB":
-            image = image.convert("RGB")
+            if image.mode != "RGB":
+                image = image.convert("RGB")
 
-        image_tensor = transform(image).unsqueeze(0).to(device)
+            image_tensor = transform(image).unsqueeze(0).to(device)
 
-        # Inference
-        with torch.no_grad():
-            outputs = model(image_tensor)
-            probabilities = torch.softmax(outputs, dim=1)
+            with torch.no_grad():
+                outputs = model(image_tensor)
+                probabilities = torch.softmax(outputs, dim=1)
 
-        confidence, predicted_class = torch.max(probabilities, dim=1)
-        confidence = confidence.item()
-        predicted_class = predicted_class.item()
+            confidence, predicted_class = torch.max(probabilities, dim=1)
+            confidence = confidence.item()
+            predicted_class = predicted_class.item()
 
-        # Get top-5 predictions
-        top5_probs, top5_indices = torch.topk(probabilities[0], k=5)
+            class_name = class_names[predicted_class]
+            prediction_by_class.labels(class_name=class_name).inc()
 
-        return {
-            "predicted_class": predicted_class,
-            "predicted_class_name": class_names[predicted_class],
-            "confidence": round(confidence, 4),
-            "top_5_predictions": [
-                {
-                    "class_id": idx.item(),
-                    "class_name": class_names[idx.item()],
-                    "confidence": round(prob.item(), 4),
-                }
-                for prob, idx in zip(top5_probs, top5_indices)
-            ],
-        }
+            top5_probs, top5_indices = torch.topk(probabilities[0], k=5)
+
+            return {
+                "predicted_class": predicted_class,
+                "predicted_class_name": class_name,
+                "confidence": round(confidence, 4),
+                "top_5_predictions": [
+                    {
+                        "class_id": idx.item(),
+                        "class_name": class_names[idx.item()],
+                        "confidence": round(prob.item(), 4),
+                    }
+                    for prob, idx in zip(top5_probs, top5_indices)
+                ],
+            }
 
     except Exception as e:
+        error_counter.inc()
         raise HTTPException(status_code=400, detail=f"Error processing image: {str(e)}")
-
 
 if __name__ == "__main__":
     import uvicorn
