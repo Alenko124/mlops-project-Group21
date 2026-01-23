@@ -219,13 +219,8 @@ We implemented unit tests located in the tests directory. The tests covered the 
 >
 > Recommended answer length: 100-200 words.
 >
-> Example:
-> *The total code coverage of code is X%, which includes all our source code. We are far from 100% coverage of our **
-> *code and even if we were then...*
 >
-> Answer:
-
---- question 8 fill here ---
+> Answer: Based on the checklist, we calculated code coverage for our project. Even if we achieved close to 100% code coverage, we would not fully trust the code to be error-free. Code coverage only measures which lines of code are executed during tests, not whether the tests are meaningful or cover all edge cases. A test could run every line but still miss logical errors, incorrect assumptions, or unexpected input combinations. High coverage is useful for identifying untested code, but it does not guarantee correctness. Quality of tests matters more than quantity - tests must verify expected behavior and handle edge cases properly.
 
 ### Question 9
 
