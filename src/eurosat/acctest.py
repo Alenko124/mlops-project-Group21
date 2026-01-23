@@ -20,7 +20,7 @@ class DataConfig:
     data_dir: str = "data/raw"
     batch_size: int = 32
     sample_every: int = 1
-    num_workers: int = 16
+    num_workers: int = 4
     pin_memory: bool = True
 
 
