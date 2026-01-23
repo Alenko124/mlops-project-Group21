@@ -82,17 +82,14 @@ class CloudPredictionLogger:
         try:
             timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S_%f")[:-3]
             bucket = self.client.bucket(self.bucket_name)
-            
+
             # Upload each record as a separate JSON file
             for idx, record in enumerate(self.buffer):
                 filename = f"{timestamp}_{len(self.buffer)}_record_{idx}.json"
                 blob_path = f"{self.predictions_folder}/{filename}"
-                
+
                 blob = bucket.blob(blob_path)
-                blob.upload_from_string(
-                    json.dumps(record, indent=2),
-                    content_type="application/json"
-                )
+                blob.upload_from_string(json.dumps(record, indent=2), content_type="application/json")
                 logger.debug(f"Uploaded record {idx} to: {blob_path}")
 
             record_count = len(self.buffer)

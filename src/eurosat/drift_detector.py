@@ -8,7 +8,7 @@ from google.cloud import storage
 from loguru import logger
 
 from evidently.legacy.report import Report
-from evidently.legacy.metric_preset import DataDriftPreset, ClassificationPreset
+from evidently.legacy.metric_preset import DataDriftPreset
 
 
 class DriftDetector:
@@ -137,7 +137,6 @@ class DriftDetector:
 
         return df
 
-
     def generate_drift_report(self, num_current_records: Optional[int] = None) -> str:
         """Generate HTML drift report comparing reference and current data.
 
@@ -214,7 +213,6 @@ class DriftDetector:
             )
             return report.get_html()
 
-
         except Exception as e:
             logger.error(f"Failed to generate drift report: {e}")
             return f"<h1>Error generating report: {str(e)}</h1>"
@@ -244,7 +242,9 @@ class DriftDetector:
 
             # Select only numeric feature columns for drift analysis
             feature_columns = ["brightness", "contrast", "sharpness", "confidence"]
-            available_features = [col for col in feature_columns if col in reference_df.columns and col in current_df.columns]
+            available_features = [
+                col for col in feature_columns if col in reference_df.columns and col in current_df.columns
+            ]
 
             if not available_features:
                 return "<h1>Error: No feature columns found</h1>"

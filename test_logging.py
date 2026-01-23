@@ -9,55 +9,55 @@ from eurosat.data_logger import CloudPredictionLogger
 
 def create_test_image() -> bytes:
     """Create a simple test image.
-    
+
     Returns:
         Image bytes
     """
     # Create a test image with some variation
     img_array = np.random.randint(0, 256, (224, 224, 3), dtype=np.uint8)
-    img = Image.fromarray(img_array, 'RGB')
-    
+    img = Image.fromarray(img_array, "RGB")
+
     img_bytes = BytesIO()
-    img.save(img_bytes, format='PNG')
+    img.save(img_bytes, format="PNG")
     return img_bytes.getvalue()
 
 
 def test_image_features():
     """Test image feature extraction."""
     print("Testing image feature extraction...")
-    
+
     # Create test image
     img_bytes = create_test_image()
-    
+
     # Extract features
     features = extract_image_features(img_bytes)
-    
-    print(f"✓ Image features extracted:")
+
+    print("✓ Image features extracted:")
     print(f"  - Brightness: {features.get('brightness')}")
     print(f"  - Contrast: {features.get('contrast')}")
     print(f"  - Sharpness: {features.get('sharpness')}")
-    
-    assert features['brightness'] is not None, "Brightness should not be None"
-    assert features['contrast'] is not None, "Contrast should not be None"
-    assert features['sharpness'] is not None, "Sharpness should not be None"
+
+    assert features["brightness"] is not None, "Brightness should not be None"
+    assert features["contrast"] is not None, "Contrast should not be None"
+    assert features["sharpness"] is not None, "Sharpness should not be None"
     print("✓ All features extracted successfully\n")
 
 
 def test_cloud_logger():
     """Test cloud prediction logger.
-    
+
     Note: This will attempt to connect to GCS. Make sure you have credentials set up.
     """
     print("Testing cloud prediction logger...")
-    
+
     try:
         logger = CloudPredictionLogger(batch_size=1)
         print("✓ Logger initialized successfully")
-        
+
         # Create test data
         img_bytes = create_test_image()
         features = extract_image_features(img_bytes)
-        
+
         # Log a prediction
         logger.log_prediction(
             predicted_class=0,
@@ -74,7 +74,7 @@ def test_cloud_logger():
             ],
         )
         print("✓ Prediction logged to buffer")
-        
+
         # Log another prediction to trigger flush (batch_size=2)
         logger.log_prediction(
             predicted_class=1,
@@ -91,14 +91,14 @@ def test_cloud_logger():
             ],
         )
         print("✓ Second prediction logged (should trigger auto-flush)")
-        
+
         # Manually flush remaining
         gcs_path = logger.flush()
         if gcs_path:
             print(f"✓ Data flushed to GCS: {gcs_path}")
         else:
             print("⚠ No data to flush or flush failed")
-            
+
     except Exception as e:
         print(f"⚠ Cloud logger test skipped (GCS not available): {e}")
         print("  This is OK if you don't have GCS credentials set up yet.")
@@ -108,10 +108,10 @@ if __name__ == "__main__":
     print("=" * 60)
     print("Testing Image Features and Cloud Logging")
     print("=" * 60 + "\n")
-    
+
     test_image_features()
     test_cloud_logger()
-    
+
     print("=" * 60)
     print("Tests completed!")
     print("=" * 60)

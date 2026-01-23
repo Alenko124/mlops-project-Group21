@@ -17,11 +17,13 @@ def create_test_image() -> BytesIO:
 
 class EuroSATUser(HttpUser):
     """Simulates a user interacting with the EuroSAT API.
-    
+
     This user class tests both health checks and image predictions,
     simulating realistic API usage patterns.
     """
-    wait_time = between(1, 3) 
+
+    wait_time = between(1, 3)
+
     @task(1)
     def health_check(self) -> None:
         with self.client.get("/health", catch_response=True) as response:
@@ -33,7 +35,7 @@ class EuroSATUser(HttpUser):
     @task(4)
     def predict_image(self) -> None:
         test_image = create_test_image()
-        
+
         with self.client.post(
             "/predict",
             files={"file": ("test.png", test_image, "image/png")},

@@ -9,7 +9,7 @@ from fastapi import FastAPI, File, UploadFile, HTTPException, Response
 from google.cloud import storage
 from PIL import Image
 from torchvision import transforms
-from prometheus_client import Counter, Histogram, Summary, make_asgi_app, CollectorRegistry, generate_latest, CONTENT_TYPE_LATEST
+from prometheus_client import Counter, Histogram, CollectorRegistry, generate_latest, CONTENT_TYPE_LATEST
 
 from eurosat.image_features import extract_image_features
 from eurosat.data_logger import CloudPredictionLogger
@@ -35,10 +35,12 @@ class_names = [
 
 # Define Prometheus metrics
 MY_REGISTRY = CollectorRegistry()
-error_counter = Counter('error_counter', 'Error counter', registry=MY_REGISTRY)
+error_counter = Counter("error_counter", "Error counter", registry=MY_REGISTRY)
 request_counter = Counter("prediction_requests", "Number of prediction requests", registry=MY_REGISTRY)
 request_latency = Histogram("prediction_latency_seconds", "Prediction latency in seconds", registry=MY_REGISTRY)
-prediction_by_class = Counter("prediction_by_class_total", "Number of predictions per EuroSAT class", ["class_name"], registry=MY_REGISTRY)
+prediction_by_class = Counter(
+    "prediction_by_class_total", "Number of predictions per EuroSAT class", ["class_name"], registry=MY_REGISTRY
+)
 
 
 def load_model_from_gcs(bucket_name: str, model_path: str) -> torch.nn.Module:
@@ -99,28 +101,28 @@ async def lifespan(app: FastAPI):
 
     print("Loading model from Google Cloud Storage...")
     try:
-        # BUCKET AND MODEL PATH 
-        bucket_name = "mlops-group21" 
+        # BUCKET AND MODEL PATH
+        bucket_name = "mlops-group21"
         model_path = "models/resnet18_eurosat_latest.pt"
 
         model = load_model_from_gcs(bucket_name, model_path)
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         transform = create_transform()
-        
+
         # Initialize prediction logger
         prediction_logger = CloudPredictionLogger(
             bucket_name=bucket_name,
             predictions_folder="predictions/data_logs",
             batch_size=1,
         )
-        
+
         # Initialize drift detector
         drift_detector = DriftDetector(
             bucket_name=bucket_name,
             reference_folder="predictions/reference_data",
             current_folder="predictions/data_logs",
         )
-        
+
         print("Prediction logger initialized successfully")
         print("Drift detector initialized successfully")
         print("Model loaded successfully")
@@ -142,7 +144,7 @@ app = FastAPI(
     description="API for classifying satellite images using ResNet18 trained on EuroSAT",
     version="1.0.0",
     lifespan=lifespan,
-    redirect_slashes=False
+    redirect_slashes=False,
 )
 
 
@@ -151,6 +153,7 @@ async def health_check():
     """Health check endpoint."""
     return {"status": "healthy", "model_loaded": model is not None}
 
+
 @app.get("/metrics", include_in_schema=False)
 def metrics():
     return Response(
@@ -158,66 +161,68 @@ def metrics():
         media_type=CONTENT_TYPE_LATEST,
     )
 
+
 @app.get("/report")
 async def get_drift_report(last_n: int = 100):
     """Get data drift monitoring report.
-    
+
     Args:
         last_n: Number of recent predictions to compare against baseline
-        
+
     Returns:
         HTML report page
     """
     if drift_detector is None:
         raise HTTPException(status_code=503, detail="Drift detector not initialized")
-    
+
     try:
         html_content = drift_detector.generate_drift_report(num_current_records=last_n)
         return Response(content=html_content, media_type="text/html")
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error generating report: {str(e)}")
 
+
 @app.get("/report/features")
 async def get_feature_drift_report(last_n: int = 100):
     """Get focused data drift report on image features.
-    
+
     Args:
         last_n: Number of recent predictions to compare against baseline
-        
+
     Returns:
         HTML report page focused on brightness, contrast, sharpness, confidence
     """
     if drift_detector is None:
         raise HTTPException(status_code=503, detail="Drift detector not initialized")
-    
+
     try:
-        html_content = drift_detector.generate_feature_drift_report(
-            num_current_records=last_n
-        )
+        html_content = drift_detector.generate_feature_drift_report(num_current_records=last_n)
         return Response(content=html_content, media_type="text/html")
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error generating report: {str(e)}")
 
+
 @app.get("/drift-summary")
 async def get_drift_summary(last_n: int = 100):
     """Get summary statistics about data drift.
-    
+
     Args:
         last_n: Number of recent predictions to analyze
-        
+
     Returns:
         JSON with drift summary statistics
     """
     if drift_detector is None:
         raise HTTPException(status_code=503, detail="Drift detector not initialized")
-    
+
     summary = drift_detector.get_drift_summary(num_current_records=last_n)
     return summary
+
 
 @app.post("/predict")
 async def predict(file: UploadFile = File(...), log_to_cloud: bool = True):
     """Classify a satellite image and optionally log to cloud.
-    
+
     Args:
         file: Image file to classify
         log_to_cloud: Whether to log prediction and features to cloud (default: True)
@@ -284,6 +289,7 @@ async def predict(file: UploadFile = File(...), log_to_cloud: bool = True):
     except Exception as e:
         error_counter.inc()
         raise HTTPException(status_code=400, detail=f"Error processing image: {str(e)}")
+
 
 if __name__ == "__main__":
     import uvicorn

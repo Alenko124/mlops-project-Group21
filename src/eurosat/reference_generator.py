@@ -158,9 +158,7 @@ class ReferenceDataGenerator:
             logger.error(f"Failed to process {image_path}: {e}")
             return None
 
-    def process_directory(
-        self, data_dir: Path, sample_every: int = 1
-    ) -> list:
+    def process_directory(self, data_dir: Path, sample_every: int = 1) -> list:
         """Process all images in a directory structure.
 
         Args:
@@ -209,17 +207,14 @@ class ReferenceDataGenerator:
         try:
             base_name = filename.replace(".jsonl", "")
             bucket = self.gcs_client.bucket(self.bucket_name)
-            
+
             # Upload each record as a separate JSON file
             for idx, record in enumerate(records):
                 file_name = f"{base_name}_record_{idx}.json"
                 blob_path = f"{self.reference_folder}/{file_name}"
-                
+
                 blob = bucket.blob(blob_path)
-                blob.upload_from_string(
-                    json.dumps(record, indent=2),
-                    content_type="application/json"
-                )
+                blob.upload_from_string(json.dumps(record, indent=2), content_type="application/json")
                 logger.debug(f"Uploaded record {idx} to: {blob_path}")
 
             first_blob_path = f"{self.reference_folder}/{base_name}_record_0.json"
@@ -262,9 +257,7 @@ class ReferenceDataGenerator:
 if __name__ == "__main__":
     import argparse
 
-    parser = argparse.ArgumentParser(
-        description="Generate reference baseline from training data"
-    )
+    parser = argparse.ArgumentParser(description="Generate reference baseline from training data")
     parser.add_argument(
         "--data-dir",
         type=Path,
@@ -310,7 +303,7 @@ if __name__ == "__main__":
     )
 
     if gcs_path:
-        print(f"✓ Reference baseline generated successfully!")
+        print("✓ Reference baseline generated successfully!")
         print(f"  Saved to: {gcs_path}")
     else:
         print("✗ Failed to generate reference baseline")

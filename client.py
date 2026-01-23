@@ -85,7 +85,7 @@ class ImageClassificationClient:
             log_to_cloud: Whether to log predictions to cloud
             random_sample: Whether to randomly sample images
         """
-        print(f"🚀 Starting Image Classification Client")
+        print("🚀 Starting Image Classification Client")
         print(f"   API URL: {self.api_url}")
         print(f"   Test data: {test_data_dir}")
         print(f"   Num requests: {num_requests}")
@@ -112,16 +112,17 @@ class ImageClassificationClient:
 
                 if result:
                     print(
-                        f"  ✓ Predicted: {result['predicted_class_name']} "
-                        f"(confidence: {result['confidence']:.4f})"
+                        f"  ✓ Predicted: {result['predicted_class_name']} " f"(confidence: {result['confidence']:.4f})"
                     )
 
                     # Display extracted image features
                     features = result.get("image_features", {})
                     if features:
-                        print(f"  📊 Features - Brightness: {features.get('brightness'):.2f}, "
-                              f"Contrast: {features.get('contrast'):.2f}, "
-                              f"Sharpness: {features.get('sharpness'):.4f}")
+                        print(
+                            f"  📊 Features - Brightness: {features.get('brightness'):.2f}, "
+                            f"Contrast: {features.get('contrast'):.2f}, "
+                            f"Sharpness: {features.get('sharpness'):.4f}"
+                        )
 
                     successful += 1
                 else:
@@ -134,7 +135,7 @@ class ImageClassificationClient:
             print()
             print(f"✅ Completed: {successful} successful, {failed} failed")
             if log_to_cloud:
-                print(f"📤 Predictions logged to: gs://mlops-group21/predictions/data_logs/")
+                print("📤 Predictions logged to: gs://mlops-group21/predictions/data_logs/")
 
         except FileNotFoundError as e:
             print(f"❌ Error: {e}")
@@ -144,9 +145,7 @@ class ImageClassificationClient:
 
 def main():
     """Main entry point for the client."""
-    parser = argparse.ArgumentParser(
-        description="Send satellite images to EuroSAT API for prediction and data logging"
-    )
+    parser = argparse.ArgumentParser(description="Send satellite images to EuroSAT API for prediction and data logging")
     parser.add_argument(
         "--url",
         type=str,

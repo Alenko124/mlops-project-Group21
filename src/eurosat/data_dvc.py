@@ -9,8 +9,8 @@ import numpy as np
 from PIL import Image
 
 from torch.utils.data import DataLoader, Subset
-from torchvision import transforms
 from torchvision.datasets import ImageFolder
+
 
 class AlbumentationsTransform:
     def __init__(self, transform):
@@ -29,7 +29,6 @@ class DataConfig:
     sample_every: int = 40
     num_workers: int = 4
     pin_memory: bool = True
-
 
 
 def subsample_dataset(dataset, n: int):
@@ -77,11 +76,22 @@ def get_transforms():
 def create_dataloaders(
     config: DataConfig,
 ) -> Tuple[DataLoader, DataLoader, DataLoader]:
-
     train_tf, eval_tf = get_transforms()
 
     root = Path(config.data_dir)
 
+    train_ds = ImageFolder(
+        root / "train",
+        transform=AlbumentationsTransform(train_tf),
+    )
+    val_ds = ImageFolder(
+        root / "val",
+        transform=AlbumentationsTransform(eval_tf),
+    )
+    test_ds = ImageFolder(
+        root / "test",
+        transform=AlbumentationsTransform(eval_tf),
+    )
     train_ds = ImageFolder(
         root / "train",
         transform=AlbumentationsTransform(train_tf),
