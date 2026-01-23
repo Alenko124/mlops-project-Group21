@@ -64,8 +64,8 @@ will check the repositories and the code to verify your answers.
 * [X] Do a bit of code typing and remember to document essential parts of your code (M7)
 * [X] Setup version control for your data or part of your data (M8)
 * [X] Add command line interfaces and project commands to your code where it makes sense (M9)
-* [ ] Construct one or multiple docker files for your code (M10)
-* [ ] Build the docker files locally and make sure they work as intended (M10)
+* [X] Construct one or multiple docker files for your code (M10)
+* [X] Build the docker files locally and make sure they work as intended (M10)
 * [X] Write one or multiple configurations files for your experiments (M11)
 * [X] Used Hydra to load the configurations and manage your hyperparameters (M11)
 * [X] Use profiling to optimize your code (M12)
@@ -97,9 +97,9 @@ will check the repositories and the code to verify your answers.
 
 ### Week 3
 
-* [ ] Check how robust your model is towards data drifting (M27)
-* [ ] Setup collection of input-output data from your deployed application (M27)
-* [ ] Deploy to the cloud a drift detection API (M27)
+* [x] Check how robust your model is towards data drifting (M27)
+* [x] Setup collection of input-output data from your deployed application (M27)
+* [X] Deploy to the cloud a drift detection API (M27)
 * [X] Instrument your API with a couple of system metrics (M28)
 * [X] Setup cloud monitoring of your instrumented application (M28)
 * [X] Create one or more alert systems in GCP to alert you if your app is not behaving correctly (M28)
