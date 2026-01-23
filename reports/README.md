@@ -349,7 +349,13 @@ This approach allows both reproducible defaults and quick experimentation. All c
 >
 > Answer:
 
---- question 13 fill here ---
+Reproducibility was secured through multiple complementary mechanisms. All experiment configurations (learning rate, epochs, optimizer, batch size, model architecture) are defined in the `TrainingConfig` dataclass with sensible defaults. Random seeds are fixed (default 42) to ensure deterministic behavior in data loading and model initialization. All hyperparameters and their values are automatically logged to Weights & Biases at the start of each run, creating a complete record of the experiment configuration.
+
+Training outputs, including checkpoints and logs, are saved to timestamped directories in the `outputs` folder, preventing accidental overwriting. The complete configuration used for each run is stored as part of the W&B run metadata, allowing later inspection or reproduction.
+
+To reproduce an experiment, one would simply run: `uv run python -m eurosat.train --epochs 30 --lr 1e-4 --seed 42` with the same parameter values.
+
+We established a robust framework for reproducible iteration through configuration management and experiment tracking. However, due to time constraints, we were unable to fully leverage this framework to conduct extensive model refinement that would have further optimized model performance.
 
 ### Question 14
 
@@ -367,6 +373,7 @@ This approach allows both reproducible defaults and quick experimentation. All c
 > Answer:
 
 --- question 14 fill here ---
+
 
 ### Question 15
 
