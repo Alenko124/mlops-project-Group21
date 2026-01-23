@@ -208,11 +208,8 @@ These practices are critical in larger projects because they prevent bugs early 
 ### Question 7
 
 > **How many tests did you implement and what are they testing in your code?**
->
-> Recommended answer length: 50-100 words.
->
-> 
-> Answer: We implemented unit tests located in the tests directory. The tests covered the data processing part of our code, ensuring that data loading and preprocessing functions work correctly. We also wrote tests for model construction to verify that the model architecture is built properly. The continuous integration workflow (tests.yaml) runs these tests automatically on each push to ensure code reliability.
+
+We implemented unit tests located in the tests directory. The tests covered the data processing part of our code, ensuring that data loading and preprocessing functions work correctly. We also wrote tests for model construction to verify that the model architecture is built properly. The continuous integration workflow (tests.yaml) runs these tests automatically on each push to ensure code reliability.
 
 
 ### Question 8
