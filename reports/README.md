@@ -378,7 +378,28 @@ Overall, W&B enabled structured experiment tracking, easy comparison of multiple
 >
 > Answer:
 
---- question 15 fill here ---
+Docker was used to containerize the training and deployment workflows to ensure reproducibility and consistency across local and cloud environments. All dependencies, environment variables, and runtime configurations were packaged into Docker images, eliminating differences between development and production setups.
+
+We built a dedicated training image that contains the full training pipeline, including data loading, model definition, and experiment tracking. This image was pushed to a container registry and later reused for cloud-based training on Vertex AI. Training parameters such as the number of epochs were passed as runtime arguments to the container. For example, the training image can be run locally using:
+`docker run train:latest --epochs=30`
+
+Docker was also used for deployment by packaging the inference API into a separate container image. This image was deployed to Cloud Run, where it serves predictions via an HTTP endpoint.
+
+Using Docker allowed us to reuse the same images for local testing, cloud training, and deployment, significantly improving reproducibility and simplifying debugging. It also enabled seamless integration with CI/CD pipelines and cloud services.
+
+Dockerfiles are located in the following directory:
+`dockerfiles/`
+
+The used images were stored in Google Artifact Registry mlops-group21.
+Example:
+`europe-west1-docker.pkg.dev/sapient-cycling-484413-u2/mlops-group21/eurosat:latest`
+
+To download the image locally:
+`docker pull europe-west1-docker.pkg.dev/sapient-cycling-484413-u2/mlops-group21/eurosat:latest`
+
+To run the training container locally:
+`docker run europe-west1-docker.pkg.dev/sapient-cycling-484413-u2/mlops-group21/eurosat:latest --epochs=30`
+
 
 ### Question 16
 
