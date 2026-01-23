@@ -176,7 +176,12 @@ Yes, we used several open-source frameworks and packages that were not explicitl
 >
 > Answer:
 
---- question 4 fill here ---
+We managed project dependencies using **uv**, which provides fast and reproducible Python dependency management based on a lockfile. All required packages and exact versions are defined in the project configuration, ensuring consistent environments across all machines.
+
+To get an exact copy of the development environment, a new team member only needs to clone the repository and run `uv sync`. This command automatically creates an isolated virtual environment and installs all dependencies.
+
+New dependencies were added using `uv add`, which updates the project configuration and lockfile to keep the environment fully reproducible.
+
 
 ### Question 5
 
@@ -192,7 +197,12 @@ Yes, we used several open-source frameworks and packages that were not explicitl
 >
 > Answer:
 
---- question 5 fill here ---
+The project was initialized using the cookiecutter template, which provided a clear and standardized structure for organizing code, data, and experiments. The main development was carried out in the `src` directory, which contains the core training, data loading, and inference logic. Model checkpoints were stored in the `models` directory, while training outputs, logs, and profiling results were saved in the `outputs` folder. Project report is in the `reports` directory.
+
+We used the `configs` folder to manage experiment configurations using Hydra.
+
+We deviated slightly from the original cookiecutter template to better support cloud-based workflows. Additional Dockerfiles were added to containerize training. We also added a `vertexAI` directory containing configuration files and scripts for running custom training jobs on Google Cloud Vertex AI. Furthermore, several YAML files were added in the project root to define CI/CD triggers and cloud build configurations. These deviations were necessary to support deployment, automation, and scalable cloud execution.
+
 
 ### Question 6
 
