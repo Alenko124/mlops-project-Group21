@@ -330,8 +330,6 @@ We also logged the epoch number explicitly. System-level metrics, such as disk u
 
 Overall, W&B enabled structured experiment tracking, easy comparison of multiple runs, and clear visualization of training dynamics. This made it significantly easier to debug training behavior, assess convergence, and select suitable model configurations.
 
-
-
 ### Question 15
 
 > **Docker is an important tool for creating containerized applications. Explain how you used docker in your**
@@ -367,7 +365,6 @@ Link to dockerfile: dockerfiles/train.dockerfile
 We did profile our code - the outputs/runs/last_run_profiling.json file indicates profiling was performed. No code is perfect, and profiling helped identify bottlenecks in data loading and model training. This information was valuable for optimizing training performance, especially when scaling to cloud infrastructure.
 > 
 
-
 ## Working in the cloud
 
 > In the following section we would like to know more about your experience when developing in the cloud.
@@ -378,8 +375,6 @@ We did profile our code - the outputs/runs/last_run_profiling.json file indicate
 >
 > Recommended answer length: 50-200 words.
 >
-> Example:
-> *We used the following two services: Engine and Bucket. Engine is used for... and Bucket is used for...*
 >
 > Answer:
 
@@ -398,13 +393,9 @@ We used the following GCP services in our project:
 >
 > Recommended answer length: 100-200 words.
 >
-> Example:
-> *We used the compute engine to run our ... . We used instances with the following hardware: ... and we started the*
-> *using a custom container: ...*
->
 > Answer:
-
---- question 18 fill here ---
+>
+> We used Compute Engine indirectly through Vertex AI for training. The Vertex AI configuration files (vertex.yaml and vertexcuda.yaml) specify the machine types used for training jobs. These configurations define the compute resources allocated for containerized training, including CPU and GPU specifications when needed. Vertex AI provisions and manages the underlying compute instances automatically, allowing us to focus on training rather than infrastructure management. The VMs were started using custom containers built from our Dockerfiles and stored in Artifact Registry.
 
 ### Question 19
 
