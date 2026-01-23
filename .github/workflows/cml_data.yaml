@@ -3,11 +3,11 @@ name: DVC Workflow
 on:
   pull_request:
     branches:
-    - main
-    # paths:
-    # - '**/*.dvc'
-    # - '.dvc/**'
-    - master
+      - main
+      - master
+    paths:
+      - '**/*.dvc'
+      - '.dvc/**'
   workflow_dispatch:
 
 permissions:

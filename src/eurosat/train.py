@@ -151,8 +151,8 @@ class TrainingConfig:
     model: ModelConfig = field(default_factory=ModelConfig)
     enable_profiling: bool = True
     enable_wandb: bool = True
-    wandb_entity: str = "lp6adi-danmarks-tekniske-universitet-dtu"
-    wandb_project: str = "eurosat"
+    wandb_entity: str = "mlopstesting"
+    wandb_project: str = "s_kruh_te"
 
 
 def apply_args_to_config(cfg: TrainingConfig, args: argparse.Namespace) -> TrainingConfig:
