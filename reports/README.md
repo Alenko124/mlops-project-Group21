@@ -638,4 +638,6 @@ Student s253790 contributed to several core aspects of the project, with a focus
 
 The student also contributed to containerizing the workflows using Docker and supported the setup of cloud-based training on Vertex AI through configuration files. In addition, student s253790 participated in deploying the inference service and setting up basic monitoring and logging.
 
+Student s232101 led the implementation of code quality standards (M7), implemented profiling and optimization strategies (M12), and set up comprehensive logging and experiment tracking with Weights & Biases (M14). He also contributed to unit testing (M16) and pre-commit hook configuration (M18), and partially contributed to the data versioning workflow (M19). Beyond these specific modules, this student was instrumental in establishing coding conventions, maintaining consistent git practices, and providing cross-functional support to team members across all project tasks.
+
 Generative AI tools were used as supportive development aids during the project, to assist with debugging, understanding error messages, and structuring code and documentation.
