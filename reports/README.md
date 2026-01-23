@@ -195,11 +195,6 @@ We deviated slightly from the original cookiecutter template to better support c
 
 > **Did you implement any rules for code quality and format? What about typing and documentation? Additionally,**
 > **explain with your own words why these concepts matters in larger projects.**
->
-> Recommended answer length: 100-200 words.
->
->
-> Answer:
 
 We implemented comprehensive code quality standards using **ruff** for both linting and formatting. All Python files are automatically checked and formatted through pre-commit hooks to enforce consistency before commits. Type hints are applied throughout the codebase (e.g., function signatures include parameter and return types), enabling better IDE support and early error detection. Documentation follows Google-style docstrings for all functions and classes, explaining purpose, arguments, and return values.
 
