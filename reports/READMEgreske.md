@@ -52,65 +52,65 @@ will check the repositories and the code to verify your answers.
 
 ### Week 1
 
-* [ ] Create a git repository (M5)
-* [ ] Make sure that all team members have write access to the GitHub repository (M5)
-* [ ] Create a dedicated environment for you project to keep track of your packages (M2)
-* [ ] Create the initial file structure using cookiecutter with an appropriate template (M6)
-* [ ] Fill out the `data.py` file such that it downloads whatever data you need and preprocesses it (if necessary) (M6)
-* [ ] Add a model to `model.py` and a training procedure to `train.py` and get that running (M6)
-* [ ] Remember to either fill out the `requirements.txt`/`requirements_dev.txt` files or keeping your
+* [X] Create a git repository (M5)
+* [X] Make sure that all team members have write access to the GitHub repository (M5)
+* [X] Create a dedicated environment for you project to keep track of your packages (M2)
+* [X] Create the initial file structure using cookiecutter with an appropriate template (M6)
+* [X] Fill out the `data.py` file such that it downloads whatever data you need and preprocesses it (if necessary) (M6)
+* [X] Add a model to `model.py` and a training procedure to `train.py` and get that running (M6)
+* [X] Remember to either fill out the `requirements.txt`/`requirements_dev.txt` files or keeping your
     `pyproject.toml`/`uv.lock` up-to-date with whatever dependencies that you are using (M2+M6)
-* [ ] Remember to comply with good coding practices (`pep8`) while doing the project (M7)
-* [ ] Do a bit of code typing and remember to document essential parts of your code (M7)
-* [ ] Setup version control for your data or part of your data (M8)
-* [ ] Add command line interfaces and project commands to your code where it makes sense (M9)
-* [ ] Construct one or multiple docker files for your code (M10)
-* [ ] Build the docker files locally and make sure they work as intended (M10)
-* [ ] Write one or multiple configurations files for your experiments (M11)
-* [ ] Used Hydra to load the configurations and manage your hyperparameters (M11)
-* [ ] Use profiling to optimize your code (M12)
-* [ ] Use logging to log important events in your code (M14)
-* [ ] Use Weights & Biases to log training progress and other important metrics/artifacts in your code (M14)
-* [ ] Consider running a hyperparameter optimization sweep (M14)
+* [X] Remember to comply with good coding practices (`pep8`) while doing the project (M7)
+* [X] Do a bit of code typing and remember to document essential parts of your code (M7)
+* [X] Setup version control for your data or part of your data (M8)
+* [X] Add command line interfaces and project commands to your code where it makes sense (M9)
+* [X] Construct one or multiple docker files for your code (M10)
+* [X] Build the docker files locally and make sure they work as intended (M10)
+* [X] Write one or multiple configurations files for your experiments (M11)
+* [X] Used Hydra to load the configurations and manage your hyperparameters (M11)
+* [X] Use profiling to optimize your code (M12)
+* [X] Use logging to log important events in your code (M14)
+* [X] Use Weights & Biases to log training progress and other important metrics/artifacts in your code (M14)
+* [X] Consider running a hyperparameter optimization sweep (M14)
 * [ ] Use PyTorch-lightning (if applicable) to reduce the amount of boilerplate in your code (M15)
 
 ### Week 2
 
-* [ ] Write unit tests related to the data part of your code (M16)
-* [ ] Write unit tests related to model construction and or model training (M16)
-* [ ] Calculate the code coverage (M16)
-* [ ] Get some continuous integration running on the GitHub repository (M17)
-* [ ] Add caching and multi-os/python/pytorch testing to your continuous integration (M17)
-* [ ] Add a linting step to your continuous integration (M17)
-* [ ] Add pre-commit hooks to your version control setup (M18)
-* [ ] Add a continues workflow that triggers when data changes (M19)
+* [X] Write unit tests related to the data part of your code (M16)
+* [X] Write unit tests related to model construction and or model training (M16)
+* [X] Calculate the code coverage (M16)
+* [X] Get some continuous integration running on the GitHub repository (M17)
+* [X] Add caching and multi-os/python/pytorch testing to your continuous integration (M17)
+* [X] Add a linting step to your continuous integration (M17)
+* [X] Add pre-commit hooks to your version control setup (M18)
+* [X] Add a continues workflow that triggers when data changes (M19)
 * [ ] Add a continues workflow that triggers when changes to the model registry is made (M19)
-* [ ] Create a data storage in GCP Bucket for your data and link this with your data version control setup (M21)
-* [ ] Create a trigger workflow for automatically building your docker images (M21)
-* [ ] Get your model training in GCP using either the Engine or Vertex AI (M21)
-* [ ] Create a FastAPI application that can do inference using your model (M22)
-* [ ] Deploy your model in GCP using either Functions or Run as the backend (M23)
-* [ ] Write API tests for your application and setup continues integration for these (M24)
-* [ ] Load test your application (M24)
+* [X] Create a data storage in GCP Bucket for your data and link this with your data version control setup (M21)
+* [X] Create a trigger workflow for automatically building your docker images (M21)
+* [X] Get your model training in GCP using either the Engine or Vertex AI (M21)
+* [X] Create a FastAPI application that can do inference using your model (M22)
+* [X] Deploy your model in GCP using either Functions or Run as the backend (M23)
+* [X] Write API tests for your application and setup continues integration for these (M24)
+* [X] Load test your application (M24)
 * [ ] Create a more specialized ML-deployment API using either ONNX or BentoML, or both (M25)
 * [ ] Create a frontend for your API (M26)
 
 ### Week 3
 
-* [ ] Check how robust your model is towards data drifting (M27)
-* [ ] Setup collection of input-output data from your deployed application (M27)
-* [ ] Deploy to the cloud a drift detection API (M27)
-* [ ] Instrument your API with a couple of system metrics (M28)
-* [ ] Setup cloud monitoring of your instrumented application (M28)
-* [ ] Create one or more alert systems in GCP to alert you if your app is not behaving correctly (M28)
-* [ ] If applicable, optimize the performance of your data loading using distributed data loading (M29)
+* [x] Check how robust your model is towards data drifting (M27)
+* [x] Setup collection of input-output data from your deployed application (M27)
+* [X] Deploy to the cloud a drift detection API (M27)
+* [X] Instrument your API with a couple of system metrics (M28)
+* [X] Setup cloud monitoring of your instrumented application (M28)
+* [X] Create one or more alert systems in GCP to alert you if your app is not behaving correctly (M28)
+* [X] If applicable, optimize the performance of your data loading using distributed data loading (M29)
 * [ ] If applicable, optimize the performance of your training pipeline by using distributed training (M30)
 * [ ] Play around with quantization, compilation and pruning for you trained models to increase inference speed (M31)
 
 ### Extra
 
-* [ ] Write some documentation for your application (M32)
-* [ ] Publish the documentation to GitHub Pages (M32)
+* [x] Write some documentation for your application (M32)
+* [x] Publish the documentation to GitHub Pages (M32)
 * [ ] Revisit your initial project description. Did the project turn out as you wanted?
 * [ ] Create an architectural diagram over your MLOps pipeline
 * [ ] Make sure all group members have an understanding about all parts of the project
@@ -128,23 +128,16 @@ will check the repositories and the code to verify your answers.
 ### Question 2
 > **Enter the study number for each member in the group**
 >
-> Example:
->
-> *sXXXXXX, sXXXXXX, sXXXXXX*
 >
 > Answer:
 
---- question 2 fill here ---
+s250864
 
 ### Question 3
 > **Did you end up using any open-source frameworks/packages not covered in the course during your project? If so**
 > **which did you use and how did they help you complete the project?**
 >
 > Recommended answer length: 0-200 words.
->
-> Example:
-> *We used the third-party framework ... in our project. We used functionality ... and functionality ... from the*
-> *package to do ... and ... in our project*.
 >
 > Answer:
 
@@ -155,6 +148,7 @@ Yes, we used several open-source frameworks and packages that were not explicitl
 - **Hugging Face Datasets** – Used to download and manage the EuroSAT. It simplified dataset loading, preprocessing, and dataset splitting.
 
 - **timm** – Used to load a pre-trained image classification model. It enabled efficient transfer learning by providing well-tested architectures.
+
 
 ## Coding environment
 
@@ -168,10 +162,6 @@ Yes, we used several open-source frameworks and packages that were not explicitl
 >
 > Recommended answer length: 100-200 words
 >
-> Example:
-> *We used ... for managing our dependencies. The list of dependencies was auto-generated using ... . To get a*
-> *complete copy of our development environment, one would have to run the following commands*
->
 > Answer:
 
 We managed project dependencies using **uv**, which provides fast and reproducible Python dependency management based on a lockfile. All required packages and exact versions are defined in the project configuration, ensuring consistent environments across all machines.
@@ -180,17 +170,13 @@ To get an exact copy of the development environment, a new team member only need
 
 New dependencies were added using `uv add`, which updates the project configuration and lockfile to keep the environment fully reproducible.
 
+
 ### Question 5
 
 > **We expect that you initialized your project using the cookiecutter template. Explain the overall structure of your**
 > **code. What did you fill out? Did you deviate from the template in some way?**
 >
 > Recommended answer length: 100-200 words
->
-> Example:
-> *From the cookiecutter template we have filled out the ... , ... and ... folder. We have removed the ... folder*
-> *because we did not use any ... in our project. We have added an ... folder that contains ... for running our*
-> *experiments.*
 >
 > Answer:
 
@@ -200,18 +186,12 @@ We used the `configs` folder to manage experiment configurations using Hydra. Ba
 
 We deviated slightly from the original cookiecutter template to better support cloud-based workflows. Additional Dockerfiles were added to containerize training. We also added a `vertexAI` directory containing configuration files and scripts for running custom training jobs on Google Cloud Vertex AI. Furthermore, several YAML files were added in the project root to define CI/CD triggers and cloud build configurations. These deviations were necessary to support deployment, automation, and scalable cloud execution.
 
+
+
 ### Question 6
 
 > **Did you implement any rules for code quality and format? What about typing and documentation? Additionally,**
 > **explain with your own words why these concepts matters in larger projects.**
->
-> Recommended answer length: 100-200 words.
->
-> Example:
-> *We used ... for linting and ... for formatting. We also used ... for typing and ... for documentation. These*
-> *concepts are important in larger projects because ... . For example, typing ...*
->
-> Answer:
 
 We implemented comprehensive code quality standards using **ruff** for both linting and formatting. All Python files are automatically checked and formatted through pre-commit hooks to enforce consistency before commits. Type hints are applied throughout the codebase (e.g., function signatures include parameter and return types), enabling better IDE support and early error detection. Documentation follows Google-style docstrings for all functions and classes, explaining purpose, arguments, and return values.
 
@@ -228,13 +208,11 @@ These practices are critical in larger projects because they prevent bugs early 
 >
 > Recommended answer length: 50-100 words.
 >
-> Example:
-> *In total we have implemented X tests. Primarily we are testing ... and ... as these the most critical parts of our*
-> *application but also ... .*
 >
 > Answer:
 
 We implemented unit tests located in the tests directory. The tests covered the data processing part of our code, ensuring that data loading and preprocessing functions work correctly. We also wrote tests for model construction to verify that the model architecture is built properly. The continuous integration workflow (tests.yaml) runs these tests automatically on each push to ensure code reliability.
+
 
 ### Question 8
 
@@ -243,9 +221,6 @@ We implemented unit tests located in the tests directory. The tests covered the 
 >
 > Recommended answer length: 100-200 words.
 >
-> Example:
-> *The total code coverage of code is X%, which includes all our source code. We are far from 100% coverage of our **
-> *code and even if we were then...*
 >
 > Answer:
 
@@ -258,9 +233,6 @@ Based on the checklist, we calculated code coverage for our project. Even if we 
 >
 > Recommended answer length: 100-200 words.
 >
-> Example:
-> *We made use of both branches and PRs in our project. In our group, each member had an branch that they worked on in*
-> *addition to the main branch. To merge code we ...*
 >
 > Answer:
 
@@ -275,10 +247,6 @@ We enforced a frequent commit and PR cadence to keep the codebase up-to-date and
 >
 > Recommended answer length: 100-200 words.
 >
-> Example:
-> *We did make use of DVC in the following way: ... . In the end it helped us in ... for controlling ... part of our*
-> *pipeline*
->
 > Answer:
 
 Yes, we used DVC for data version control. The presence of data.dvc, .dvc folder, and .dvcignore file in the repository confirms this. DVC helped us track changes to the EuroSAT dataset without storing large image files in Git. It allowed us to version control data transformations and preprocessing steps, ensuring reproducibility. DVC also enabled efficient data sharing among team members by storing data remotely in Google Cloud Storage buckets while keeping lightweight pointers in Git. This separation of code and data version control improved workflow efficiency and made it easy to sync datasets across different environments.
@@ -290,11 +258,6 @@ Yes, we used DVC for data version control. The presence of data.dvc, .dvc folder
 > **to insert a link to one of your GitHub actions workflow.**
 >
 > Recommended answer length: 200-300 words.
->
-> Example:
-> *We have organized our continuous integration into 3 separate files: one for doing ..., one for running ... testing*
-> *and one for running ... . In particular for our ..., we used ... .An example of a triggered workflow can be seen*
-> *here: <weblink>*
 >
 > Answer:
 
@@ -318,8 +281,6 @@ Unfortunately, we did not implement a model-level continuous integration workflo
 >
 > Recommended answer length: 50-100 words.
 >
-> Example:
-> *We used a simple argparser, that worked in the following way: Python  my_script.py --lr 1e-3 --batch_size 25*
 >
 > Answer:
 
@@ -337,10 +298,6 @@ This approach allows both reproducible defaults and quick experimentation. All c
 > **is lost when running experiments and that your experiments are reproducible?**
 >
 > Recommended answer length: 100-200 words.
->
-> Example:
-> *We made use of config files. Whenever an experiment is run the following happens: ... . To reproduce an experiment*
-> *one would have to do ...*
 >
 > Answer:
 
@@ -361,12 +318,8 @@ We established a robust framework for reproducible iteration through configurati
 >
 > Recommended answer length: 200-300 words + 1 to 3 screenshots.
 >
-> Example:
-> *As seen in the first image when have tracked ... and ... which both inform us about ... in our experiments.*
-> *As seen in the second image we are also tracking ... and ...*
 >
 > Answer:
-
 ![wandbA](figures/hyperparameter_sweep.png)
 
 ![wandbA](figures/wandbA.png)
@@ -388,9 +341,6 @@ Overall, W&B enabled structured experiment tracking, easy comparison of multiple
 >
 > Recommended answer length: 100-200 words.
 >
-> Example:
-> *For our project we developed several images: one for training, inference and deployment. For example to run the*
-> *training docker image: `docker run trainer:latest lr=1e-3 batch_size=64`. Link to docker file: <weblink>*
 >
 > Answer:
 
@@ -413,14 +363,11 @@ Link to dockerfile: dockerfiles/train.dockerfile
 >
 > Recommended answer length: 100-200 words.
 >
-> Example:
-> *Debugging method was dependent on group member. Some just used ... and others used ... . We did a single profiling*
-> *run of our main code at some point that showed ...*
->
 > Answer:
 
 For debugging, we used standard Python debugging approaches including print statements, logging, and running code interactively. The outputs folder contains run logs that helped track down issues. The test_logging.py file suggests we implemented proper logging infrastructure.
 We did profile our code - the outputs/runs/last_run_profiling.json file indicates profiling was performed. No code is perfect, and profiling helped identify bottlenecks in data loading and model training. This information was valuable for optimizing training performance, especially when scaling to cloud infrastructure.
+
 
 ## Working in the cloud
 
@@ -432,8 +379,6 @@ We did profile our code - the outputs/runs/last_run_profiling.json file indicate
 >
 > Recommended answer length: 50-200 words.
 >
-> Example:
-> *We used the following two services: Engine and Bucket. Engine is used for... and Bucket is used for...*
 >
 > Answer:
 
@@ -451,10 +396,6 @@ We used the following GCP services in our project:
 > **you used?**
 >
 > Recommended answer length: 100-200 words.
->
-> Example:
-> *We used the compute engine to run our ... . We used instances with the following hardware: ... and we started the*
-> *using a custom container: ...*
 >
 > Answer:
 
@@ -485,7 +426,7 @@ Screenshot from our GCP Artifact Registry showing the Docker images stored for t
 >
 > Answer:
 
-Screenshot from the GCP Cloud Build history showing recent builds of our Docker images (including build status and timestamps). [Cloud Build](figures/cloud_build.JPG)
+Sscreenshot from the GCP Cloud Build history showing recent builds of our Docker images (including build status and timestamps). [Cloud Build](figures/cloud_build.JPG)
 
 ### Question 22
 
@@ -493,10 +434,6 @@ Screenshot from the GCP Cloud Build history showing recent builds of our Docker 
 > **it. If not, describe why.**
 >
 > Recommended answer length: 100-200 words.
->
-> Example:
-> *We managed to train our model in the cloud using the Engine. We did this by ... . The reason we choose the Engine*
-> *was because ...*
 >
 > Answer:
 
@@ -508,6 +445,7 @@ Training was triggered using a YAML configuration file that defines a Vertex AI 
 
 Vertex AI was chosen because it provides clean separation between code, configuration, and execution. This setup allowed us to run cloud-based training in a reproducible way.
 
+
 ## Deployment
 
 ### Question 23
@@ -517,13 +455,10 @@ Vertex AI was chosen because it provides clean separation between code, configur
 >
 > Recommended answer length: 100-200 words.
 >
-> Example:
-> *We did manage to write an API for our model. We used FastAPI to do this. We did this by ... . We also added ...*
-> *to the API to make it more ...*
->
 > Answer:
 
 Yes, we wrote an API for our model using FastAPI. The api.dockerfile and client.py files indicate we implemented a REST API for model inference. The API accepts image uploads, runs inference using the trained ResNet-18 model, and returns predicted land-use class labels. We containerized the API using Docker to ensure consistent deployment. The client.py file serves as an example of how to interact with the deployed API endpoint.
+
 
 ### Question 24
 
@@ -531,11 +466,6 @@ Yes, we wrote an API for our model using FastAPI. The api.dockerfile and client.
 > **preferably how you invoke your deployed service?**
 >
 > Recommended answer length: 100-200 words.
->
-> Example:
-> *For deployment we wrapped our model into application using ... . We first tried locally serving the model, which*
-> *worked. Afterwards we deployed it in the cloud, using ... . To invoke the service an user would call*
-> *`curl -X POST -F "file=@file.json"<weburl>`*
 >
 > Answer:
 
@@ -551,10 +481,6 @@ The client.py script provides a programmatic way to interact with the deployed s
 >
 > Recommended answer length: 100-200 words.
 >
-> Example:
-> *For unit testing we used ... and for load testing we used ... . The results of the load testing showed that ...*
-> *before the service crashed.*
->
 > Answer:
 
 Yes, we performed both unit testing and load testing of the API. According to the checklist, we wrote API tests and set up continuous integration for them. Load testing was performed to evaluate API performance under concurrent requests. The tests helped identify the request throughput the service could handle before response times degraded significantly. Results informed decisions about resource allocation and autoscaling configuration for the Cloud Run deployment.
@@ -566,9 +492,6 @@ Yes, we performed both unit testing and load testing of the API. According to th
 >
 > Recommended answer length: 100-200 words.
 >
-> Example:
-> *We did not manage to implement monitoring. We would like to have monitoring implemented such that over time we could*
-> *measure ... and ... that would inform us about this ... behaviour of our application.*
 >
 > Answer:
 
@@ -577,6 +500,7 @@ Yes, we implemented monitoring for the deployed model. The inference service exp
 A metrics sidecar is used to scrape the exposed metrics and forward them to the cloud monitoring system. This allows metrics to be visualized and analyzed over time without modifying the application logic. In addition to custom metrics, standard service-level metrics such as CPU usage, memory consumption, request rate, and error rates are also collected automatically through Cloud Run.
 
 Metrics such as latency and error rate can indicate issues, while prediction-related metrics can highlight unexpected usage patterns.
+
 
 ## Overall discussion of project
 
@@ -589,10 +513,6 @@ Metrics such as latency and error rate can indicate issues, while prediction-rel
 >
 > Recommended answer length: 100-200 words.
 >
-> Example:
-> *Group member 1 used ..., Group member 2 used ..., in total ... credits was spend during development. The service*
-> *costing the most was ... due to ... . Working in the cloud was ...*
->
 > Answer:
 
 The most expensive service used during the project was Vertex AI, with a total cost of approximately $5.36. This is expected, as Vertex AI was used to run container-based model training jobs in the cloud, including a full training run of 30 epochs on managed compute resources. The second largest cost came from Cloud Storage ($1.17), which was used to store datasets, model artifacts, and intermediate outputs.
@@ -600,6 +520,7 @@ The most expensive service used during the project was Vertex AI, with a total c
 Additional costs were incurred by Cloud Run ($0.67) for hosting the inference API, Artifact Registry ($0.45) for storing Docker images, and Compute Engine ($0.33), mainly due to underlying infrastructure usage. Minor costs were also associated with Cloud Build, networking, logging, and VM management, each contributing only a small fraction of the total spend.
 
 Overall, working in the cloud was a positive experience. It enabled scalable training, reproducibility, and seamless integration between services. While training workloads can be costly, careful usage kept total spending low while still benefiting from managed cloud infrastructure.
+
 
 ### Question 28
 
@@ -609,13 +530,8 @@ Overall, working in the cloud was a positive experience. It enabled scalable tra
 >
 > Recommended answer length: 0-200 words.
 >
-> Example:
-> *We implemented a frontend for our API. We did this because we wanted to show the user ... . The frontend was*
-> *implemented using ...*
->
 > Answer:
-
-Yes, we implemented several additional features:
+> Yes, we implemented several additional features:
 
 Drift detection - Set up monitoring to detect data drift in production using a dedicated drift detection API deployed to the cloud
 Custom metrics collection - The sidecar.yaml file indicates we deployed a metrics sidecar for advanced monitoring
@@ -632,16 +548,13 @@ These features went beyond basic requirements and enhanced the production readin
 >
 > Recommended answer length: 200-400 words
 >
-> Example:
->
-> *The starting point of the diagram is our local setup, where we integrated ... and ... and ... into our code.*
-> *Whenever we commit code and push to GitHub, it auto triggers ... and ... . From there the diagram shows ...*
->
 > Answer:
+>
 
 The architecture begins with the development environment where code is written and pushed to GitHub. The repository includes DVC for data versioning, which connects to Google Cloud Storage for storing datasets. When code is pushed to GitHub, it triggers GitHub Actions workflows for continuous integration, running tests and pre-commit checks. Successful builds trigger Cloud Build, which creates Docker images and pushes them to Artifact Registry.
 
 For training, Vertex AI pulls the training container from Artifact Registry and accesses raw data from GCS buckets. After training, model artifacts are saved back to GCS and the model registry. The serving layer uses Cloud Run to host the FastAPI inference service. The service loads models from the registry and serves predictions to end users. A Streamlit frontend provides a user interface for uploading images and receiving predictions. Throughout the pipeline, Cloud Monitoring collects metrics and logs, enabling observability and alerting for both training and inference components.
+
 
 ### Question 30
 
@@ -650,8 +563,6 @@ For training, Vertex AI pulls the training container from Artifact Registry and 
 >
 > Recommended answer length: 200-400 words.
 >
-> Example:
-> *The biggest challenges in the project was using ... tool to do ... . The reason for this was ...*
 >
 > Answer:
 
@@ -665,6 +576,7 @@ Deployment and monitoring also introduced challenges. Exposing metrics, configur
 
 Overall, most of the project time was spent on infrastructure, automation, and debugging rather than pure model development. These challenges were overcome through iterative development, extensive testing, and a strong focus on reproducibility. While demanding, this process provided valuable experience in real-world MLOps workflows and highlighted the importance of robust tooling and automation in machine learning projects.
 
+
 ### Question 31
 
 > **State the individual contributions of each team member. This is required information from DTU, because we need to**
@@ -673,13 +585,6 @@ Overall, most of the project time was spent on infrastructure, automation, and d
 >
 > Recommended answer length: 50-300 words.
 >
-> Example:
-> *Student sXXXXXX was in charge of developing of setting up the initial cookie cutter project and developing of the*
-> *docker containers for training our applications.*
-> *Student sXXXXXX was in charge of training our models in the cloud and deploying them afterwards.*
-> *All members contributed to code by...*
-> *We have used ChatGPT to help debug our code. Additionally, we used GitHub Copilot to help write some of our code.*
-> Answer:
 
 Student s253790 contributed to several core aspects of the project, with a focus on the technical implementation and cloud integration. This included working on the project structure based on the cookiecutter template, implementing parts of the training and inference pipeline.
 
