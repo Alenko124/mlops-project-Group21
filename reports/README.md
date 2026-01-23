@@ -342,6 +342,7 @@ We established a robust framework for reproducible iteration through configurati
 > *As seen in the second image we are also tracking ... and ...*
 >
 > Answer:
+![wandbA](figures/hyperparameter_sweep.png)
 
 ![wandbA](figures/wandbA.png)
 
