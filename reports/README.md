@@ -580,18 +580,13 @@ Overall, most of the project time was spent on infrastructure, automation, and d
 >
 > Recommended answer length: 50-300 words.
 >
-> Example:
-> *Student sXXXXXX was in charge of developing of setting up the initial cookie cutter project and developing of the*
-> *docker containers for training our applications.*
-> *Student sXXXXXX was in charge of training our models in the cloud and deploying them afterwards.*
-> *All members contributed to code by...*
-> *We have used ChatGPT to help debug our code. Additionally, we used GitHub Copilot to help write some of our code.*
-> Answer:
 
 Student s253790 contributed to several core aspects of the project, with a focus on the technical implementation and cloud integration. This included working on the project structure based on the cookiecutter template, implementing parts of the training and inference pipeline.
 
 The student also contributed to containerizing the workflows using Docker and supported the setup of cloud-based training on Vertex AI through configuration files. In addition, student s253790 participated in deploying the inference service and setting up basic monitoring and logging.
 
 Student s232101 led the implementation of code quality standards (M7), implemented profiling and optimization strategies (M12), and set up comprehensive logging and experiment tracking with Weights & Biases (M14). He also contributed to unit testing (M16) and pre-commit hook configuration (M18), and partially contributed to the data versioning workflow (M19). Beyond these specific modules, this student was instrumental in establishing coding conventions, maintaining consistent git practices, and providing cross-functional support to team members across all project tasks.
+
+Student s250864 was responsible for implementing the frontend for the API (M26) by creating a Streamlit-based user interface that allows users to upload satellite images and receive predictions. This student also completed the full project architecture diagram and updated the documentation (M32), ensuring the README accurately reflected the MLOps pipeline. Additionally, student s250864 implemented load testing for the deployed API (M24) and fixed CI/linting issues in the codebase, including corrections to train.py and app.py to ensure smooth continuous integration workflows.
 
 Generative AI tools were used as supportive development aids during the project, to assist with debugging, understanding error messages, and structuring code and documentation.
