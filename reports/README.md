@@ -218,7 +218,12 @@ We deviated slightly from the original cookiecutter template to better support c
 >
 > Answer:
 
+
 --- question 6 fill here ---
+
+We implemented comprehensive code quality standards using **ruff** for both linting and formatting. All Python files are automatically checked and formatted through pre-commit hooks to enforce consistency before commits. Type hints are applied throughout the codebase (e.g., function signatures include parameter and return types), enabling better IDE support and early error detection. Documentation follows Google-style docstrings for all functions and classes, explaining purpose, arguments, and return values.
+
+These practices are critical in larger projects because they prevent bugs early through static type checking, improve code maintainability by making intent explicit, and reduce onboarding time for new team members who can quickly understand code behavior. Consistent formatting eliminates style-related merge conflicts and review comments. Type hints particularly benefit collaborative development by serving as inline documentation and enabling tools to catch type mismatches before runtime. Automated enforcement through pre-commit hooks ensures standards are maintained without manual effort.
 
 ## Version control
 
@@ -267,7 +272,9 @@ We deviated slightly from the original cookiecutter template to better support c
 >
 > Answer:
 
---- question 9 fill here ---
+Yes, we maintained a structured workflow using branches and pull requests throughout the project. Each task corresponded to a dedicated feature branch following the naming convention `{module_number}-{task_description}` (e.g., `M7-code-quality`). This approach made it easy to track which changes corresponded to which requirements.
+
+We enforced a frequent commit and PR cadence to keep the codebase up-to-date and minimize merge conflicts. Whenever a PR was created, the team was notified through our communication channel, ensuring visibility across the group. For PRs that modified shared code, we explicitly assigned reviewers from other team members to ensure quality control and knowledge sharing. This practice prevented siloed development, caught potential issues early, and distributed understanding of the codebase across the team. Pre-commit hooks and CI/CD checks automatically validated code quality on each PR before merging to main.
 
 ### Question 10
 
@@ -602,3 +609,5 @@ We deviated slightly from the original cookiecutter template to better support c
 > Answer:
 
 --- question 31 fill here ---
+
+Student s232101 led the implementation of code quality standards (M7), implemented profiling and optimization strategies (M12), and set up comprehensive logging and experiment tracking with Weights & Biases (M14). He also contributed to unit testing (M16) and pre-commit hook configuration (M18), and partially contributed to the data versioning workflow (M19). Beyond these specific modules, this student was instrumental in establishing coding conventions, maintaining consistent git practices, and providing cross-functional support to team members across all project tasks.
