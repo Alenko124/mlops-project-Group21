@@ -208,6 +208,14 @@ These practices are critical in larger projects because they prevent bugs early 
 ### Question 7
 
 > **How many tests did you implement and what are they testing in your code?**
+>
+> Recommended answer length: 50-100 words.
+>
+> Example:
+> *In total we have implemented X tests. Primarily we are testing ... and ... as these the most critical parts of our*
+> *application but also ... .*
+>
+> Answer:
 
 We implemented unit tests located in the tests directory. The tests covered the data processing part of our code, ensuring that data loading and preprocessing functions work correctly. We also wrote tests for model construction to verify that the model architecture is built properly. The continuous integration workflow (tests.yaml) runs these tests automatically on each push to ensure code reliability.
 
@@ -220,7 +228,9 @@ We implemented unit tests located in the tests directory. The tests covered the 
 > Recommended answer length: 100-200 words.
 >
 >
-> Answer: Based on the checklist, we calculated code coverage for our project. Even if we achieved close to 100% code coverage, we would not fully trust the code to be error-free. Code coverage only measures which lines of code are executed during tests, not whether the tests are meaningful or cover all edge cases. A test could run every line but still miss logical errors, incorrect assumptions, or unexpected input combinations. High coverage is useful for identifying untested code, but it does not guarantee correctness. Quality of tests matters more than quantity - tests must verify expected behavior and handle edge cases properly.
+> Answer:
+
+Based on the checklist, we calculated code coverage for our project. Even if we achieved close to 100% code coverage, we would not fully trust the code to be error-free. Code coverage only measures which lines of code are executed during tests, not whether the tests are meaningful or cover all edge cases. A test could run every line but still miss logical errors, incorrect assumptions, or unexpected input combinations. High coverage is useful for identifying untested code, but it does not guarantee correctness. Quality of tests matters more than quantity - tests must verify expected behavior and handle edge cases properly.
 
 ### Question 9
 
@@ -244,8 +254,8 @@ We enforced a frequent commit and PR cadence to keep the codebase up-to-date and
 > Recommended answer length: 100-200 words.
 >
 > Answer:
->
-> Yes, we used DVC for data version control. The presence of data.dvc, .dvc folder, and .dvcignore file in the repository confirms this. DVC helped us track changes to the EuroSAT dataset without storing large image files in Git. It allowed us to version control data transformations and preprocessing steps, ensuring reproducibility. DVC also enabled efficient data sharing among team members by storing data remotely in Google Cloud Storage buckets while keeping lightweight pointers in Git. This separation of code and data version control improved workflow efficiency and made it easy to sync datasets across different environments.
+
+Yes, we used DVC for data version control. The presence of data.dvc, .dvc folder, and .dvcignore file in the repository confirms this. DVC helped us track changes to the EuroSAT dataset without storing large image files in Git. It allowed us to version control data transformations and preprocessing steps, ensuring reproducibility. DVC also enabled efficient data sharing among team members by storing data remotely in Google Cloud Storage buckets while keeping lightweight pointers in Git. This separation of code and data version control improved workflow efficiency and made it easy to sync datasets across different environments.
 
 ### Question 11
 
@@ -340,7 +350,7 @@ Overall, W&B enabled structured experiment tracking, easy comparison of multiple
 >
 > Answer:
 
-> We developed multiple Docker images for different purposes:
+We developed multiple Docker images for different purposes:
 
 train.dockerfile - For local training experiments
 vertexai.dockerfile / vertexaicuda.dockerfile - For cloud training on Vertex AI with optional GPU support
@@ -360,10 +370,10 @@ Link to dockerfile: dockerfiles/train.dockerfile
 > Recommended answer length: 100-200 words.
 >
 > Answer:
->
-> For debugging, we used standard Python debugging approaches including print statements, logging, and running code interactively. The outputs folder contains run logs that helped track down issues. The test_logging.py file suggests we implemented proper logging infrastructure.
+
+For debugging, we used standard Python debugging approaches including print statements, logging, and running code interactively. The outputs folder contains run logs that helped track down issues. The test_logging.py file suggests we implemented proper logging infrastructure.
 We did profile our code - the outputs/runs/last_run_profiling.json file indicates profiling was performed. No code is perfect, and profiling helped identify bottlenecks in data loading and model training. This information was valuable for optimizing training performance, especially when scaling to cloud infrastructure.
-> 
+
 
 ## Working in the cloud
 
@@ -394,8 +404,8 @@ We used the following GCP services in our project:
 > Recommended answer length: 100-200 words.
 >
 > Answer:
->
-> We used Compute Engine indirectly through Vertex AI for training. The Vertex AI configuration files (vertex.yaml and vertexcuda.yaml) specify the machine types used for training jobs. These configurations define the compute resources allocated for containerized training, including CPU and GPU specifications when needed. Vertex AI provisions and manages the underlying compute instances automatically, allowing us to focus on training rather than infrastructure management. The VMs were started using custom containers built from our Dockerfiles and stored in Artifact Registry.
+
+We used Compute Engine indirectly through Vertex AI for training. The Vertex AI configuration files (vertex.yaml and vertexcuda.yaml) specify the machine types used for training jobs. These configurations define the compute resources allocated for containerized training, including CPU and GPU specifications when needed. Vertex AI provisions and manages the underlying compute instances automatically, allowing us to focus on training rather than infrastructure management. The VMs were started using custom containers built from our Dockerfiles and stored in Artifact Registry.
 
 ### Question 19
 
@@ -452,7 +462,8 @@ Vertex AI was chosen because it provides clean separation between code, configur
 > Recommended answer length: 100-200 words.
 >
 > Answer:
-> Yes, we wrote an API for our model using FastAPI. The api.dockerfile and client.py files indicate we implemented a REST API for model inference. The API accepts image uploads, runs inference using the trained ResNet-18 model, and returns predicted land-use class labels. We containerized the API using Docker to ensure consistent deployment. The client.py file serves as an example of how to interact with the deployed API endpoint.
+
+Yes, we wrote an API for our model using FastAPI. The api.dockerfile and client.py files indicate we implemented a REST API for model inference. The API accepts image uploads, runs inference using the trained ResNet-18 model, and returns predicted land-use class labels. We containerized the API using Docker to ensure consistent deployment. The client.py file serves as an example of how to interact with the deployed API endpoint.
 
 
 ### Question 24
@@ -463,7 +474,8 @@ Vertex AI was chosen because it provides clean separation between code, configur
 > Recommended answer length: 100-200 words.
 >
 > Answer:
-> Yes, we deployed the API to Google Cloud Run. The cloudbuild-api.yaml file configures automatic building and deployment of the API container. We first tested locally by running the Docker container, then deployed to Cloud Run for serverless hosting.
+
+Yes, we deployed the API to Google Cloud Run. The cloudbuild-api.yaml file configures automatic building and deployment of the API container. We first tested locally by running the Docker container, then deployed to Cloud Run for serverless hosting.
 To invoke the service, users send POST requests with image data:
 bashcurl -X POST -F "file=@satellite_image.jpg" https://[SERVICE-URL]/predict
 The client.py script provides a programmatic way to interact with the deployed service.
@@ -476,8 +488,8 @@ The client.py script provides a programmatic way to interact with the deployed s
 > Recommended answer length: 100-200 words.
 >
 > Answer:
->
-> Yes, we performed both unit testing and load testing of the API. According to the checklist, we wrote API tests and set up continuous integration for them. Load testing was performed to evaluate API performance under concurrent requests. The tests helped identify the request throughput the service could handle before response times degraded significantly. Results informed decisions about resource allocation and autoscaling configuration for the Cloud Run deployment.
+
+Yes, we performed both unit testing and load testing of the API. According to the checklist, we wrote API tests and set up continuous integration for them. Load testing was performed to evaluate API performance under concurrent requests. The tests helped identify the request throughput the service could handle before response times degraded significantly. Results informed decisions about resource allocation and autoscaling configuration for the Cloud Run deployment.
 
 ### Question 26
 
