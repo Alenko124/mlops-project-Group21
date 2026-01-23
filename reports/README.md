@@ -646,7 +646,7 @@ These features went beyond basic requirements and enhanced the production readin
 
 The architecture begins with the development environment where code is written and pushed to GitHub. The repository includes DVC for data versioning, which connects to Google Cloud Storage for storing datasets. When code is pushed to GitHub, it triggers GitHub Actions workflows for continuous integration, running tests and pre-commit checks. Successful builds trigger Cloud Build, which creates Docker images and pushes them to Artifact Registry.
 
-For training, Vertex AI pulls the training container from Artifact Registry and accesses raw data from GCS buckets. After training, model artifacts are saved back to GCS and the model registry. The serving layer uses Cloud Run to host the FastAPI inference service. The service loads models from the registry and serves predictions to end users. A Streamlit frontend provides a user interface for uploading images and receiving predictions. Throughout the pipeline, Cloud Monitoring collects metrics and logs, enabling observability and alerting for both training and inference components.
+For training, Vertex AI pulls the training container from Artifact Registry and accesses raw data from GCS buckets. After training, model artifacts are saved back to GCS and the model registry. The serving layer uses Cloud Run to host the FastAPI inference service. The service loads models from the registry and serves predictions to end users. A Streamlit frontend provides a user interface for uploading images and receiving predictions. Throughout the pipeline, Cloud Monitoring collects metrics and logs, enabling observability and alerting for both training and inference components. ![overview](figures/overview21.png) 
 
 ### Question 30
 
