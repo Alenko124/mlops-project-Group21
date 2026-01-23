@@ -357,7 +357,18 @@ We enforced a frequent commit and PR cadence to keep the codebase up-to-date and
 >
 > Answer:
 
---- question 14 fill here ---
+![wandbA](figures/wandbA.png)
+
+We used Weights & Biases (W&B) to track and visualize experiments during model training. The screenshot show multiple training runs logged over 30 epochs, allowing us to compare model behavior across different configurations and executions.
+
+The primary metrics we tracked were training loss and validation loss. These metrics are essential for understanding how well the model learns from the training data and how well it generalizes to unseen validation data. A decreasing training loss indicates that the model is fitting the data, while validation loss helps identify overfitting or underfitting. Monitoring both simultaneously allowed us to verify that training was stable and progressing as expected.
+
+In addition to loss, we tracked training accuracy and validation accuracy. These metrics provide an intuitive measure of classification performance and make it easier to compare different runs. Validation accuracy was particularly important for selecting the best-performing model, as it reflects generalization performance rather than memorization of the training data.
+
+We also logged the epoch number explicitly. System-level metrics, such as disk usage and network traffic, were logged automatically and provided insight into resource utilization during trainin.
+
+Overall, W&B enabled structured experiment tracking, easy comparison of multiple runs, and clear visualization of training dynamics. This made it significantly easier to debug training behavior, assess convergence, and select suitable model configurations.
+
 
 ### Question 15
 
