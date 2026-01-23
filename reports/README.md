@@ -197,11 +197,12 @@ New dependencies were added using `uv add`, which updates the project configurat
 >
 > Answer:
 
-The project was initialized using the cookiecutter template, which provided a clear and standardized structure for organizing code, data, and experiments. The main development was carried out in the `src` directory, which contains the core training, data loading, and inference logic. Model checkpoints were stored in the `models` directory, while training outputs, logs, and profiling results were saved in the `outputs` folder. Project report is in the `reports` directory.
+The project was initialized using the cookiecutter template, which provided a clear and standardized structure for organizing code, data, and experiments. The main development was carried out in the `src` directory, which contains the core training, data loading, and inference logic. Model checkpoints were stored in the `models` directory, while training outputs, logs, and profiling results were saved in the `outputs` folder. The project report is stored in the `reports` directory.
 
-We used the `configs` folder to manage experiment configurations using Hydra.
+We used the `configs` folder to manage experiment configurations using Hydra. Basic unit tests were implemented in a dedicated `tests` directory and executed using pytest to validate core functionality.
 
 We deviated slightly from the original cookiecutter template to better support cloud-based workflows. Additional Dockerfiles were added to containerize training. We also added a `vertexAI` directory containing configuration files and scripts for running custom training jobs on Google Cloud Vertex AI. Furthermore, several YAML files were added in the project root to define CI/CD triggers and cloud build configurations. These deviations were necessary to support deployment, automation, and scalable cloud execution.
+
 
 
 ### Question 6
