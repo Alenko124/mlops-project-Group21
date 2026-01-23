@@ -142,10 +142,6 @@ will check the repositories and the code to verify your answers.
 >
 > Recommended answer length: 0-200 words.
 >
-> Example:
-> *We used the third-party framework ... in our project. We used functionality ... and functionality ... from the*
-> *package to do ... and ... in our project*.
->
 > Answer:
 
 Yes, we used several open-source frameworks and packages that were not explicitly covered in the course, and they helped us complete the project:
@@ -155,7 +151,6 @@ Yes, we used several open-source frameworks and packages that were not explicitl
 - **Hugging Face Datasets** – Used to download and manage the EuroSAT. It simplified dataset loading, preprocessing, and dataset splitting.
 
 - **timm** – Used to load a pre-trained image classification model. It enabled efficient transfer learning by providing well-tested architectures.
-
 
 
 ## Coding environment
@@ -169,10 +164,6 @@ Yes, we used several open-source frameworks and packages that were not explicitl
 > **through to get an exact copy of your environment.**
 >
 > Recommended answer length: 100-200 words
->
-> Example:
-> *We used ... for managing our dependencies. The list of dependencies was auto-generated using ... . To get a*
-> *complete copy of our development environment, one would have to run the following commands*
 >
 > Answer:
 
@@ -189,11 +180,6 @@ New dependencies were added using `uv add`, which updates the project configurat
 > **code. What did you fill out? Did you deviate from the template in some way?**
 >
 > Recommended answer length: 100-200 words
->
-> Example:
-> *From the cookiecutter template we have filled out the ... , ... and ... folder. We have removed the ... folder*
-> *because we did not use any ... in our project. We have added an ... folder that contains ... for running our*
-> *experiments.*
 >
 > Answer:
 
@@ -212,9 +198,6 @@ We deviated slightly from the original cookiecutter template to better support c
 >
 > Recommended answer length: 100-200 words.
 >
-> Example:
-> *We used ... for linting and ... for formatting. We also used ... for typing and ... for documentation. These*
-> *concepts are important in larger projects because ... . For example, typing ...*
 >
 > Answer:
 
@@ -233,13 +216,9 @@ These practices are critical in larger projects because they prevent bugs early 
 >
 > Recommended answer length: 50-100 words.
 >
-> Example:
-> *In total we have implemented X tests. Primarily we are testing ... and ... as these the most critical parts of our*
-> *application but also ... .*
->
-> Answer:
+> 
+> Answer: We implemented unit tests located in the tests directory. The tests covered the data processing part of our code, ensuring that data loading and preprocessing functions work correctly. We also wrote tests for model construction to verify that the model architecture is built properly. The continuous integration workflow (tests.yaml) runs these tests automatically on each push to ensure code reliability.
 
---- question 7 fill here ---
 
 ### Question 8
 
