@@ -251,8 +251,8 @@ We enforced a frequent commit and PR cadence to keep the codebase up-to-date and
 > *pipeline*
 >
 > Answer:
-
---- question 10 fill here ---
+>
+> Yes, we used DVC for data version control. The presence of data.dvc, .dvc folder, and .dvcignore file in the repository confirms this. DVC helped us track changes to the EuroSAT dataset without storing large image files in Git. It allowed us to version control data transformations and preprocessing steps, ensuring reproducibility. DVC also enabled efficient data sharing among team members by storing data remotely in Google Cloud Storage buckets while keeping lightweight pointers in Git. This separation of code and data version control improved workflow efficiency and made it easy to sync datasets across different environments.
 
 ### Question 11
 
