@@ -2,7 +2,6 @@
 
 from contextlib import asynccontextmanager
 from io import BytesIO
-from typing import Optional
 
 import torch
 import timm

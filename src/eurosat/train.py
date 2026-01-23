@@ -1,35 +1,36 @@
+import argparse
 import json
+import os
 import random
-from dataclasses import asdict, dataclass, field, replace
+from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
-from google.cloud import storage
-import argparse
+
 import numpy as np
+import psutil
 import torch
 import torch.nn as nn
 import torch.optim as optim
 import wandb
 from torch.profiler import ProfilerActivity, profile
-from typing import Optional
-import psutil, os
+
 from eurosat.data_dvc import DataConfig, create_dataloaders
 from eurosat.model import ModelConfig, create_model
+
 
 def mem(msg):
     print(msg, psutil.Process(os.getpid()).memory_info().rss / 1024**3, "GB")
 
+
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description="Training configuration overrides"
-    )
-    #data
+    parser = argparse.ArgumentParser(description="Training configuration overrides")
+    # data
     parser.add_argument(
-    "--data-dir",
-    type=str,
-    default=None,
-    help="Path to dataset root directory",
+        "--data-dir",
+        type=str,
+        default=None,
+        help="Path to dataset root directory",
     )
 
     parser.add_argument(
@@ -60,12 +61,12 @@ def parse_args() -> argparse.Namespace:
         help="Enable pin_memory in DataLoader",
     )
 
-    #model
+    # model
     parser.add_argument(
-    "--model-name",
-    type=str,
-    default=None,
-    help="Model architecture name (e.g. resnet18.a1_in1k)",
+        "--model-name",
+        type=str,
+        default=None,
+        help="Model architecture name (e.g. resnet18.a1_in1k)",
     )
 
     parser.add_argument(
@@ -132,6 +133,7 @@ def parse_args() -> argparse.Namespace:
 
     return parser.parse_args()
 
+
 @dataclass
 class TrainingConfig:
     """Configuration for model training."""
@@ -153,9 +155,7 @@ class TrainingConfig:
     wandb_project: str = "s_kruh_te"
 
 
-def apply_args_to_config(
-    cfg: TrainingConfig, args: argparse.Namespace
-) -> TrainingConfig:
+def apply_args_to_config(cfg: TrainingConfig, args: argparse.Namespace) -> TrainingConfig:
     for key, value in vars(args).items():
         if value is None:
             continue
@@ -379,15 +379,15 @@ def _save_checkpoint(model: torch.nn.Module, path: str) -> None:
     print(f"Saved checkpoint to {checkpoint_path}")
 
     # ---- Upload to GCS ----
-    bucket_name = "mlops-group21"
-    gcs_path = f"models/{checkpoint_path.name}"
+    # bucket_name = "mlops-group21"
+    # gcs_path = f"models/{checkpoint_path.name}"
 
-    client = storage.Client()
-    bucket = client.bucket(bucket_name)
-    blob = bucket.blob(gcs_path)
+    # client = storage.Client()
+    # bucket = client.bucket(bucket_name)
+    # blob = bucket.blob(gcs_path)
 
-    blob.upload_from_filename(str(checkpoint_path))
-    print(f"☁️ Uploaded checkpoint to gs://{bucket_name}/{gcs_path}")
+    # blob.upload_from_filename(str(checkpoint_path))
+    # print(f"☁️ Uploaded checkpoint to gs://{bucket_name}/{gcs_path}")
 
 
 def _persist_run(
