@@ -142,10 +142,6 @@ will check the repositories and the code to verify your answers.
 >
 > Recommended answer length: 0-200 words.
 >
-> Example:
-> *We used the third-party framework ... in our project. We used functionality ... and functionality ... from the*
-> *package to do ... and ... in our project*.
->
 > Answer:
 
 Yes, we used several open-source frameworks and packages that were not explicitly covered in the course, and they helped us complete the project:
@@ -155,7 +151,6 @@ Yes, we used several open-source frameworks and packages that were not explicitl
 - **Hugging Face Datasets** – Used to download and manage the EuroSAT. It simplified dataset loading, preprocessing, and dataset splitting.
 
 - **timm** – Used to load a pre-trained image classification model. It enabled efficient transfer learning by providing well-tested architectures.
-
 
 
 ## Coding environment
@@ -169,10 +164,6 @@ Yes, we used several open-source frameworks and packages that were not explicitl
 > **through to get an exact copy of your environment.**
 >
 > Recommended answer length: 100-200 words
->
-> Example:
-> *We used ... for managing our dependencies. The list of dependencies was auto-generated using ... . To get a*
-> *complete copy of our development environment, one would have to run the following commands*
 >
 > Answer:
 
@@ -190,11 +181,6 @@ New dependencies were added using `uv add`, which updates the project configurat
 >
 > Recommended answer length: 100-200 words
 >
-> Example:
-> *From the cookiecutter template we have filled out the ... , ... and ... folder. We have removed the ... folder*
-> *because we did not use any ... in our project. We have added an ... folder that contains ... for running our*
-> *experiments.*
->
 > Answer:
 
 The project was initialized using the cookiecutter template, which provided a clear and standardized structure for organizing code, data, and experiments. The main development was carried out in the `src` directory, which contains the core training, data loading, and inference logic. Model checkpoints were stored in the `models` directory, while training outputs, logs, and profiling results were saved in the `outputs` folder. The project report is stored in the `reports` directory.
@@ -209,16 +195,10 @@ We deviated slightly from the original cookiecutter template to better support c
 
 > **Did you implement any rules for code quality and format? What about typing and documentation? Additionally,**
 > **explain with your own words why these concepts matters in larger projects.**
->
-> Recommended answer length: 100-200 words.
->
-> Example:
-> *We used ... for linting and ... for formatting. We also used ... for typing and ... for documentation. These*
-> *concepts are important in larger projects because ... . For example, typing ...*
->
-> Answer:
 
---- question 6 fill here ---
+We implemented comprehensive code quality standards using **ruff** for both linting and formatting. All Python files are automatically checked and formatted through pre-commit hooks to enforce consistency before commits. Type hints are applied throughout the codebase (e.g., function signatures include parameter and return types), enabling better IDE support and early error detection. Documentation follows Google-style docstrings for all functions and classes, explaining purpose, arguments, and return values.
+
+These practices are critical in larger projects because they prevent bugs early through static type checking, improve code maintainability by making intent explicit, and reduce onboarding time for new team members who can quickly understand code behavior. Consistent formatting eliminates style-related merge conflicts and review comments. Type hints particularly benefit collaborative development by serving as inline documentation and enabling tools to catch type mismatches before runtime. Automated enforcement through pre-commit hooks ensures standards are maintained without manual effort.
 
 ## Version control
 
@@ -228,16 +208,9 @@ We deviated slightly from the original cookiecutter template to better support c
 ### Question 7
 
 > **How many tests did you implement and what are they testing in your code?**
->
-> Recommended answer length: 50-100 words.
->
-> Example:
-> *In total we have implemented X tests. Primarily we are testing ... and ... as these the most critical parts of our*
-> *application but also ... .*
->
-> Answer:
 
---- question 7 fill here ---
+We implemented unit tests located in the tests directory. The tests covered the data processing part of our code, ensuring that data loading and preprocessing functions work correctly. We also wrote tests for model construction to verify that the model architecture is built properly. The continuous integration workflow (tests.yaml) runs these tests automatically on each push to ensure code reliability.
+
 
 ### Question 8
 
@@ -267,7 +240,9 @@ We deviated slightly from the original cookiecutter template to better support c
 >
 > Answer:
 
---- question 9 fill here ---
+Yes, we maintained a structured workflow using branches and pull requests throughout the project. Each task corresponded to a dedicated feature branch following the naming convention `{module_number}-{task_description}` (e.g., `M7-code-quality`). This approach made it easy to track which changes corresponded to which requirements.
+
+We enforced a frequent commit and PR cadence to keep the codebase up-to-date and minimize merge conflicts. Whenever a PR was created, the team was notified through our communication channel, ensuring visibility across the group. For PRs that modified shared code, we explicitly assigned reviewers from other team members to ensure quality control and knowledge sharing. This practice prevented siloed development, caught potential issues early, and distributed understanding of the codebase across the team. Pre-commit hooks and CI/CD checks automatically validated code quality on each PR before merging to main.
 
 ### Question 10
 
@@ -299,7 +274,13 @@ We deviated slightly from the original cookiecutter template to better support c
 >
 > Answer:
 
---- question 11 fill here ---
+We implemented a comprehensive continuous integration setup using GitHub Actions organized into separate workflows. Our CI pipeline includes unit testing via pytest to validate data loading, model construction, and API functionality. We also integrated linting checks using ruff to enforce code quality standards on every commit.
+
+The CI runs on multiple Python versions (3.10 and 3.11) and operating systems (Ubuntu and macOS) to ensure compatibility across different environments. We utilized caching for dependency installation to speed up workflow execution, which significantly reduced CI runtime on subsequent runs.
+
+Our workflow is triggered on every push to any branch and on pull requests to main, ensuring continuous validation throughout development. This automated testing caught several bugs early and prevented regressions.
+
+Unfortunately, we did not implement a model-level continuous integration workflow that would automatically validate model performance metrics or detect performance degradation on new commits. Such a workflow would have provided additional confidence in model quality and could have triggered retraining if performance fell below predefined thresholds.
 
 ## Running code and tracking experiments
 
@@ -318,7 +299,13 @@ We deviated slightly from the original cookiecutter template to better support c
 >
 > Answer:
 
---- question 12 fill here ---
+We implemented a flexible configuration system using dataclasses for structured defaults combined with command-line argument overrides for full flexibility. The `TrainingConfig` dataclass defines all experiment parameters (learning rate, epochs, optimizer, etc.) with sensible defaults. The `parse_args()` function provides a full argparse setup that allows CLI overrides of any config field. An example training run:
+
+```bash
+uv run python -m eurosat.train --epochs 30 --lr 1e-4 --optimizer adamw --data-batch-size 32 --model-freeze-backbone
+```
+
+This approach allows both reproducible defaults and quick experimentation. All configurations are logged to Weights & Biases automatically for experiment tracking and comparison.
 
 ### Question 13
 
@@ -333,7 +320,13 @@ We deviated slightly from the original cookiecutter template to better support c
 >
 > Answer:
 
---- question 13 fill here ---
+Reproducibility was secured through multiple complementary mechanisms. All experiment configurations (learning rate, epochs, optimizer, batch size, model architecture) are defined in the `TrainingConfig` dataclass with sensible defaults. Random seeds are fixed (default 42) to ensure deterministic behavior in data loading and model initialization. All hyperparameters and their values are automatically logged to Weights & Biases at the start of each run, creating a complete record of the experiment configuration.
+
+Training outputs, including checkpoints and logs, are saved to timestamped directories in the `outputs` folder, preventing accidental overwriting. The complete configuration used for each run is stored as part of the W&B run metadata, allowing later inspection or reproduction.
+
+To reproduce an experiment, one would simply run: `uv run python -m eurosat.train --epochs 30 --lr 1e-4 --seed 42` with the same parameter values.
+
+We established a robust framework for reproducible iteration through configuration management and experiment tracking. However, due to time constraints, we were unable to fully leverage this framework to conduct extensive model refinement that would have further optimized model performance.
 
 ### Question 14
 
@@ -350,7 +343,19 @@ We deviated slightly from the original cookiecutter template to better support c
 >
 > Answer:
 
---- question 14 fill here ---
+![wandbA](figures/wandbA.png)
+
+We used Weights & Biases (W&B) to track and visualize experiments during model training. The screenshot show multiple training runs logged over 30 epochs, allowing us to compare model behavior across different configurations and executions.
+
+The primary metrics we tracked were training loss and validation loss. These metrics are essential for understanding how well the model learns from the training data and how well it generalizes to unseen validation data. A decreasing training loss indicates that the model is fitting the data, while validation loss helps identify overfitting or underfitting. Monitoring both simultaneously allowed us to verify that training was stable and progressing as expected.
+
+In addition to loss, we tracked training accuracy and validation accuracy. These metrics provide an intuitive measure of classification performance and make it easier to compare different runs. Validation accuracy was particularly important for selecting the best-performing model, as it reflects generalization performance rather than memorization of the training data.
+
+We also logged the epoch number explicitly. System-level metrics, such as disk usage and network traffic, were logged automatically and provided insight into resource utilization during trainin.
+
+Overall, W&B enabled structured experiment tracking, easy comparison of multiple runs, and clear visualization of training dynamics. This made it significantly easier to debug training behavior, assess convergence, and select suitable model configurations.
+
+
 
 ### Question 15
 
@@ -460,7 +465,14 @@ Sscreenshot from the GCP Cloud Build history showing recent builds of our Docker
 >
 > Answer:
 
---- question 22 fill here ---
+Yes, we trained our model in the cloud using Vertex AI. The training workflow was based on containerized execution to ensure reproducibility and consistency with the local development environment.
+
+First, the training code and all dependencies were packaged into a Docker container. This container was built using Cloud Build and pushed to Artifact Registry. Training hyperparameters, such as the number of epochs, were passed as runtime arguments.
+
+Training was triggered using a YAML configuration file that defines a Vertex AI custom training job. This configuration specifies the container image stored in Artifact Registry, the machine type used for training, and the command-line arguments passed to the training script. The model was trained for 30 epochs on the specified Vertex AI machine.
+
+Vertex AI was chosen because it provides clean separation between code, configuration, and execution. This setup allowed us to run cloud-based training in a reproducible way.
+
 
 ## Deployment
 
@@ -523,7 +535,12 @@ Sscreenshot from the GCP Cloud Build history showing recent builds of our Docker
 >
 > Answer:
 
---- question 26 fill here ---
+Yes, we implemented monitoring for the deployed model. The inference service exposes custom application metrics such as request count, prediction frequency, and inference latency directly from the API. These metrics are collected using a lightweight monitoring setup integrated into the deployed service.
+
+A metrics sidecar is used to scrape the exposed metrics and forward them to the cloud monitoring system. This allows metrics to be visualized and analyzed over time without modifying the application logic. In addition to custom metrics, standard service-level metrics such as CPU usage, memory consumption, request rate, and error rates are also collected automatically through Cloud Run.
+
+Metrics such as latency and error rate can indicate issues, while prediction-related metrics can highlight unexpected usage patterns.
+
 
 ## Overall discussion of project
 
@@ -542,7 +559,12 @@ Sscreenshot from the GCP Cloud Build history showing recent builds of our Docker
 >
 > Answer:
 
---- question 27 fill here ---
+The most expensive service used during the project was Vertex AI, with a total cost of approximately $5.36. This is expected, as Vertex AI was used to run container-based model training jobs in the cloud, including a full training run of 30 epochs on managed compute resources. The second largest cost came from Cloud Storage ($1.17), which was used to store datasets, model artifacts, and intermediate outputs.
+
+Additional costs were incurred by Cloud Run ($0.67) for hosting the inference API, Artifact Registry ($0.45) for storing Docker images, and Compute Engine ($0.33), mainly due to underlying infrastructure usage. Minor costs were also associated with Cloud Build, networking, logging, and VM management, each contributing only a small fraction of the total spend.
+
+Overall, working in the cloud was a positive experience. It enabled scalable training, reproducibility, and seamless integration between services. While training workloads can be costly, careful usage kept total spending low while still benefiting from managed cloud infrastructure.
+
 
 ### Question 28
 
@@ -589,7 +611,16 @@ Sscreenshot from the GCP Cloud Build history showing recent builds of our Docker
 >
 > Answer:
 
---- question 30 fill here ---
+The main struggles of the project were related to building a fully reproducible end-to-end MLOps pipeline and integrating multiple tools across local and cloud environments. A significant amount of time was spent on setting up and debugging the infrastructure rather than on the model architecture itself.
+
+One major challenge was managing data and experiments in a reproducible way. Ensuring that dataset versions, preprocessing steps, and training configurations were consistent across different runs required careful coordination between the data pipeline, configuration management, and experiment tracking. This was addressed by adopting structured configuration files and enforcing strict versioning of data and parameters.
+
+Another time-consuming challenge was containerization and cloud training. Building Docker images that worked both locally and on Vertex AI required multiple iterations, especially when handling dependencies, environment variables, and runtime arguments. Debugging failed cloud training jobs was slower than local debugging. This was mitigated by first validating all training steps locally and using small-scale test runs before launching full cloud training jobs.
+
+Deployment and monitoring also introduced challenges. Exposing metrics, configuring monitoring, and ensuring that the deployed service behaved correctly under load required additional effort beyond basic model serving. Incremental testing and gradual integration of monitoring components helped stabilize the deployment.
+
+Overall, most of the project time was spent on infrastructure, automation, and debugging rather than pure model development. These challenges were overcome through iterative development, extensive testing, and a strong focus on reproducibility. While demanding, this process provided valuable experience in real-world MLOps workflows and highlighted the importance of robust tooling and automation in machine learning projects.
+
 
 ### Question 31
 
@@ -607,4 +638,8 @@ Sscreenshot from the GCP Cloud Build history showing recent builds of our Docker
 > *We have used ChatGPT to help debug our code. Additionally, we used GitHub Copilot to help write some of our code.*
 > Answer:
 
---- question 31 fill here ---
+Student s253790 contributed to several core aspects of the project, with a focus on the technical implementation and cloud integration. This included working on the project structure based on the cookiecutter template, implementing parts of the training and inference pipeline.
+
+The student also contributed to containerizing the workflows using Docker and supported the setup of cloud-based training on Vertex AI through configuration files. In addition, student s253790 participated in deploying the inference service and setting up basic monitoring and logging.
+
+Generative AI tools were used as supportive development aids during the project, to assist with debugging, understanding error messages, and structuring code and documentation.
