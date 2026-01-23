@@ -272,6 +272,7 @@ These practices are critical in larger projects because they prevent bugs early 
 >
 > Answer:
 
+--- question 9 fill here ---
 Yes, we maintained a structured workflow using branches and pull requests throughout the project. Each task corresponded to a dedicated feature branch following the naming convention `{module_number}-{task_description}` (e.g., `M7-code-quality`). This approach made it easy to track which changes corresponded to which requirements.
 
 We enforced a frequent commit and PR cadence to keep the codebase up-to-date and minimize merge conflicts. Whenever a PR was created, the team was notified through our communication channel, ensuring visibility across the group. For PRs that modified shared code, we explicitly assigned reviewers from other team members to ensure quality control and knowledge sharing. This practice prevented siloed development, caught potential issues early, and distributed understanding of the codebase across the team. Pre-commit hooks and CI/CD checks automatically validated code quality on each PR before merging to main.
@@ -461,7 +462,14 @@ We enforced a frequent commit and PR cadence to keep the codebase up-to-date and
 >
 > Answer:
 
---- question 22 fill here ---
+Yes, we trained our model in the cloud using Vertex AI. The training workflow was based on containerized execution to ensure reproducibility and consistency with the local development environment.
+
+First, the training code and all dependencies were packaged into a Docker container. This container was built using Cloud Build and pushed to Artifact Registry. Training hyperparameters, such as the number of epochs, were passed as runtime arguments.
+
+Training was triggered using a YAML configuration file that defines a Vertex AI custom training job. This configuration specifies the container image stored in Artifact Registry, the machine type used for training, and the command-line arguments passed to the training script. The model was trained for 30 epochs on the specified Vertex AI machine.
+
+Vertex AI was chosen because it provides clean separation between code, configuration, and execution. This setup allowed us to run cloud-based training in a reproducible way.
+
 
 ## Deployment
 
@@ -524,7 +532,12 @@ We enforced a frequent commit and PR cadence to keep the codebase up-to-date and
 >
 > Answer:
 
---- question 26 fill here ---
+Yes, we implemented monitoring for the deployed model. The inference service exposes custom application metrics such as request count, prediction frequency, and inference latency directly from the API. These metrics are collected using a lightweight monitoring setup integrated into the deployed service.
+
+A metrics sidecar is used to scrape the exposed metrics and forward them to the cloud monitoring system. This allows metrics to be visualized and analyzed over time without modifying the application logic. In addition to custom metrics, standard service-level metrics such as CPU usage, memory consumption, request rate, and error rates are also collected automatically through Cloud Run.
+
+Metrics such as latency and error rate can indicate issues, while prediction-related metrics can highlight unexpected usage patterns.
+
 
 ## Overall discussion of project
 
@@ -543,7 +556,12 @@ We enforced a frequent commit and PR cadence to keep the codebase up-to-date and
 >
 > Answer:
 
---- question 27 fill here ---
+The most expensive service used during the project was Vertex AI, with a total cost of approximately $5.36. This is expected, as Vertex AI was used to run container-based model training jobs in the cloud, including a full training run of 30 epochs on managed compute resources. The second largest cost came from Cloud Storage ($1.17), which was used to store datasets, model artifacts, and intermediate outputs.
+
+Additional costs were incurred by Cloud Run ($0.67) for hosting the inference API, Artifact Registry ($0.45) for storing Docker images, and Compute Engine ($0.33), mainly due to underlying infrastructure usage. Minor costs were also associated with Cloud Build, networking, logging, and VM management, each contributing only a small fraction of the total spend.
+
+Overall, working in the cloud was a positive experience. It enabled scalable training, reproducibility, and seamless integration between services. While training workloads can be costly, careful usage kept total spending low while still benefiting from managed cloud infrastructure.
+
 
 ### Question 28
 
@@ -590,7 +608,16 @@ We enforced a frequent commit and PR cadence to keep the codebase up-to-date and
 >
 > Answer:
 
---- question 30 fill here ---
+The main struggles of the project were related to building a fully reproducible end-to-end MLOps pipeline and integrating multiple tools across local and cloud environments. A significant amount of time was spent on setting up and debugging the infrastructure rather than on the model architecture itself.
+
+One major challenge was managing data and experiments in a reproducible way. Ensuring that dataset versions, preprocessing steps, and training configurations were consistent across different runs required careful coordination between the data pipeline, configuration management, and experiment tracking. This was addressed by adopting structured configuration files and enforcing strict versioning of data and parameters.
+
+Another time-consuming challenge was containerization and cloud training. Building Docker images that worked both locally and on Vertex AI required multiple iterations, especially when handling dependencies, environment variables, and runtime arguments. Debugging failed cloud training jobs was slower than local debugging. This was mitigated by first validating all training steps locally and using small-scale test runs before launching full cloud training jobs.
+
+Deployment and monitoring also introduced challenges. Exposing metrics, configuring monitoring, and ensuring that the deployed service behaved correctly under load required additional effort beyond basic model serving. Incremental testing and gradual integration of monitoring components helped stabilize the deployment.
+
+Overall, most of the project time was spent on infrastructure, automation, and debugging rather than pure model development. These challenges were overcome through iterative development, extensive testing, and a strong focus on reproducibility. While demanding, this process provided valuable experience in real-world MLOps workflows and highlighted the importance of robust tooling and automation in machine learning projects.
+
 
 ### Question 31
 
@@ -608,6 +635,8 @@ We enforced a frequent commit and PR cadence to keep the codebase up-to-date and
 > *We have used ChatGPT to help debug our code. Additionally, we used GitHub Copilot to help write some of our code.*
 > Answer:
 
---- question 31 fill here ---
+Student s253790 contributed to several core aspects of the project, with a focus on the technical implementation and cloud integration. This included working on the project structure based on the cookiecutter template, implementing parts of the training and inference pipeline.
 
-Student s232101 led the implementation of code quality standards (M7), implemented profiling and optimization strategies (M12), and set up comprehensive logging and experiment tracking with Weights & Biases (M14). He also contributed to unit testing (M16) and pre-commit hook configuration (M18), and partially contributed to the data versioning workflow (M19). Beyond these specific modules, this student was instrumental in establishing coding conventions, maintaining consistent git practices, and providing cross-functional support to team members across all project tasks.
+The student also contributed to containerizing the workflows using Docker and supported the setup of cloud-based training on Vertex AI through configuration files. In addition, student s253790 participated in deploying the inference service and setting up basic monitoring and logging.
+
+Generative AI tools were used as supportive development aids during the project, to assist with debugging, understanding error messages, and structuring code and documentation.
