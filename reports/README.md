@@ -397,7 +397,13 @@ We deviated slightly from the original cookiecutter template to better support c
 >
 > Answer:
 
---- question 17 fill here ---
+We used the following GCP services in our project:
+**Vertex AI**: Used to run model training in the cloud so training does not need to happen locally.
+**Cloud Run**: Hosts our FastAPI inference service, it runs the containerized API and scales automatically based on incoming requests.
+**Cloud Build**: Builds our Docker image from the repository and can be used in the CI/CD pipeline to automate builds.
+**Artifact Registry**: Stores the built Docker images, Cloud Run pulls images from here during deployment.
+**Cloud Storage (Bucket)**: Stores model weights, data and logged prediction data (request metadata and outputs) for monitoring and drift analysis.
+**Cloud Monitoring**: Collects operational metrics and helps track service health, request rates, latency, and errors (can also be used for alerts).
 
 ### Question 18
 
@@ -421,7 +427,7 @@ We deviated slightly from the original cookiecutter template to better support c
 >
 > Answer:
 
---- question 19 fill here ---
+We store data divided into splits, model weights and prediction logs/reference data. [GCP bucket content](figures/bucket_img2.JPG)
 
 ### Question 20
 
@@ -430,7 +436,7 @@ We deviated slightly from the original cookiecutter template to better support c
 >
 > Answer:
 
---- question 20 fill here ---
+Screenshot from our GCP Artifact Registry showing the Docker images stored for the project. [Artifact Registry](figures/artifact_registry.JPG)
 
 ### Question 21
 
@@ -439,7 +445,7 @@ We deviated slightly from the original cookiecutter template to better support c
 >
 > Answer:
 
---- question 21 fill here ---
+Sscreenshot from the GCP Cloud Build history showing recent builds of our Docker images (including build status and timestamps). [Cloud Build](figures/cloud_build.JPG)
 
 ### Question 22
 
