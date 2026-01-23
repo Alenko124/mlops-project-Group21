@@ -134,7 +134,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 2 fill here ---
+s253790, s232101, s250864, s252848
 
 ### Question 3
 > **Did you end up using any open-source frameworks/packages not covered in the course during your project? If so**
@@ -178,7 +178,8 @@ We managed project dependencies using **uv**, which provides fast and reproducib
 
 To get an exact copy of the development environment, a new team member only needs to clone the repository and run `uv sync`. This command automatically creates an isolated virtual environment and installs all dependencies.
 
-New dependencies were added using `uv add`, which updates the project configuration and lockfile to keep the environment fully reproducible.
+New dependencies were added using `uv add`, which updates the project configuration and lockfile to keep the environment fully reproducible, simplifying collaboration, onboarding, and long-term maintenance throughout the project lifecycle.
+
 
 ### Question 5
 
@@ -281,7 +282,7 @@ We enforced a frequent commit and PR cadence to keep the codebase up-to-date and
 >
 > Answer:
 
-Yes, we used DVC for data version control. The presence of data.dvc, .dvc folder, and .dvcignore file in the repository confirms this. DVC helped us track changes to the EuroSAT dataset without storing large image files in Git. It allowed us to version control data transformations and preprocessing steps, ensuring reproducibility. DVC also enabled efficient data sharing among team members by storing data remotely in Google Cloud Storage buckets while keeping lightweight pointers in Git. This separation of code and data version control improved workflow efficiency and made it easy to sync datasets across different environments.
+Yes, we used DVC for data version control. The presence of data.dvc, .dvc folder, and .dvcignore file in the repository confirms this. DVC helped us track changes to the EuroSAT dataset without storing large image files in Git. It allowed us to version control data transformations and preprocessing steps, ensuring reproducibility. DVC also enabled efficient data sharing among team members by storing data remotely in Google Cloud Storage buckets while keeping lightweight pointers in Git. This separation of code and data version control improved workflow efficiency and made it easy to sync datasets across different environments for scalable machine learning workflows.
 
 ### Question 11
 
@@ -305,6 +306,8 @@ The CI runs on multiple Python versions (3.10 and 3.11) and operating systems (U
 Our workflow is triggered on every push to any branch and on pull requests to main, ensuring continuous validation throughout development. This automated testing caught several bugs early and prevented regressions.
 
 Unfortunately, we did not implement a model-level continuous integration workflow that would automatically validate model performance metrics or detect performance degradation on new commits. Such a workflow would have provided additional confidence in model quality and could have triggered retraining if performance fell below predefined thresholds.
+
+Despite this limitation, the existing CI setup still provided strong guarantees regarding code correctness, stability, and reproducibility, forming a solid foundation that can be extended in future work to include automated model evaluation, metric tracking, and performance-based deployment decisions.
 
 ## Running code and tracking experiments
 
@@ -405,6 +408,8 @@ bashdocker build -f dockerfiles/train.dockerfile -t eurosat-trainer .
 docker run eurosat-trainer
 For Vertex AI training, we used configurations in vertex.yaml and vertexcuda.yaml which specify the container image and machine types. The cloudbuild.yaml file automates Docker image building and pushing to Artifact Registry. Docker ensured reproducibility by packaging all dependencies and eliminating environment-specific issues.
 Link to dockerfile: dockerfiles/train.dockerfile
+Here is the link to the container image in Artifact Registry: https://console.cloud.google.com/artifacts/docker/sapient-cycling-484413-u2/europe-west1/mlops-group21/eurosat?project=sapient-cycling-484413-u2
+
 
 ### Question 16
 
@@ -421,6 +426,7 @@ Link to dockerfile: dockerfiles/train.dockerfile
 
 For debugging, we used standard Python debugging approaches including print statements, logging, and running code interactively. The outputs folder contains run logs that helped track down issues. The test_logging.py file suggests we implemented proper logging infrastructure.
 We did profile our code - the outputs/runs/last_run_profiling.json file indicates profiling was performed. No code is perfect, and profiling helped identify bottlenecks in data loading and model training. This information was valuable for optimizing training performance, especially when scaling to cloud infrastructure.
+These practices improved observability, reduced debugging time, and supported informed optimization decisions throughout iterative experimentation and cloud-scale training workflows during model development.
 
 ## Working in the cloud
 
@@ -458,7 +464,7 @@ We used the following GCP services in our project:
 >
 > Answer:
 
-We used Compute Engine indirectly through Vertex AI for training. The Vertex AI configuration files (vertex.yaml and vertexcuda.yaml) specify the machine types used for training jobs. These configurations define the compute resources allocated for containerized training, including CPU and GPU specifications when needed. Vertex AI provisions and manages the underlying compute instances automatically, allowing us to focus on training rather than infrastructure management. The VMs were started using custom containers built from our Dockerfiles and stored in Artifact Registry.
+We used Compute Engine indirectly through Vertex AI for training. The Vertex AI configuration files (vertex.yaml and vertexcuda.yaml) specify the machine types used for training jobs. These configurations define the compute resources allocated for containerized training, including CPU and GPU specifications when needed. Vertex AI provisions and manages the underlying compute instances automatically, allowing us to focus on training rather than infrastructure management. The VMs were started using custom containers built from our Dockerfiles and stored in Artifact Registry. This approach simplified resource management, ensured reproducibility, and enabled seamless experimentation across different hardware configurations without manual VM setup or maintenance.
 
 ### Question 19
 
@@ -523,7 +529,7 @@ Vertex AI was chosen because it provides clean separation between code, configur
 >
 > Answer:
 
-Yes, we wrote an API for our model using FastAPI. The api.dockerfile and client.py files indicate we implemented a REST API for model inference. The API accepts image uploads, runs inference using the trained ResNet-18 model, and returns predicted land-use class labels. We containerized the API using Docker to ensure consistent deployment. The client.py file serves as an example of how to interact with the deployed API endpoint.
+Yes, we wrote an API for our model using FastAPI. The api.dockerfile and client.py files indicate we implemented a REST API for model inference. The API accepts image uploads, runs inference using the trained ResNet-18 model, and returns predicted land-use class labels. We containerized the API using Docker to ensure consistent deployment. The client.py file serves as an example of how to interact with the deployed API endpoint. This setup enabled low-latency inference, simplified deployment across environments, supported reproducible serving, and allowed easy integration with external applications, monitoring tools, and automated testing pipelines during both local development and cloud deployment phases.
 
 ### Question 24
 
@@ -541,8 +547,7 @@ Yes, we wrote an API for our model using FastAPI. The api.dockerfile and client.
 
 Yes, we deployed the API to Google Cloud Run. The cloudbuild-api.yaml file configures automatic building and deployment of the API container. We first tested locally by running the Docker container, then deployed to Cloud Run for serverless hosting.
 To invoke the service, users send POST requests with image data:
-bashcurl -X POST -F "file=@satellite_image.jpg" https://[SERVICE-URL]/predict
-The client.py script provides a programmatic way to interact with the deployed service.
+bashcurl -X POST -F "file=@satellite_image.jpg" https://eurosat-api-923343148347.europe-west1.run.app/predict. The client.py script provides a programmatic way to interact with the deployed service. Cloud Run handled request routing, and infrastructure management, enabling reliable, cost-efficient inference, seamless updates through container redeployments, and secure public access while maintaining low operational overhead for the deployed machine learning service.
 
 ### Question 25
 
@@ -688,5 +693,9 @@ The student also contributed to containerizing the workflows using Docker and su
 Student s232101 led the implementation of code quality standards (M7), implemented profiling and optimization strategies (M12), and set up comprehensive logging and experiment tracking with Weights & Biases (M14). He also contributed to unit testing (M16) and pre-commit hook configuration (M18), and partially contributed to the data versioning workflow (M19). Beyond these specific modules, this student was instrumental in establishing coding conventions, maintaining consistent git practices, and providing cross-functional support to team members across all project tasks.
 
 Student s250864 was responsible for implementing the frontend for the API (M26) by creating a Streamlit-based user interface that allows users to upload satellite images and receive predictions. This student also completed the full project architecture diagram and updated the documentation (M32), ensuring the README accurately reflected the MLOps pipeline. Additionally, student s250864 implemented load testing for the deployed API (M24) and fixed CI/linting issues in the codebase, including corrections to train.py and app.py to ensure smooth continuous integration workflows.
+
+Student s252848 contributed to the project setup and the core deployment and testing workflow. The student helped establish the initial repository structure and development environment, and collaborated with student s253790 on early versions of the training, data, and model scripts.
+
+The student implemented unit tests for the data pipeline and model construction and set up GitHub Actions CI to run tests automatically. The student also developed the FastAPI inference service, deployed it to Google Cloud Run, and added API functionality tests and load testing. Finally, the student implemented collection of prediction input-output logs and deployed a drift detection API for data drift monitoring.
 
 Generative AI tools were used as supportive development aids during the project, to assist with debugging, understanding error messages, and structuring code and documentation.
