@@ -109,8 +109,8 @@ will check the repositories and the code to verify your answers.
 
 ### Extra
 
-* [ ] Write some documentation for your application (M32)
-* [ ] Publish the documentation to GitHub Pages (M32)
+* [x] Write some documentation for your application (M32)
+* [x] Publish the documentation to GitHub Pages (M32)
 * [ ] Revisit your initial project description. Did the project turn out as you wanted?
 * [ ] Create an architectural diagram over your MLOps pipeline
 * [ ] Make sure all group members have an understanding about all parts of the project
@@ -431,10 +431,6 @@ Sscreenshot from the GCP Cloud Build history showing recent builds of our Docker
 >
 > Recommended answer length: 100-200 words.
 >
-> Example:
-> *We managed to train our model in the cloud using the Engine. We did this by ... . The reason we choose the Engine*
-> *was because ...*
->
 > Answer:
 
 Yes, we trained our model in the cloud using Vertex AI. The training workflow was based on containerized execution to ensure reproducibility and consistency with the local development environment.
@@ -455,13 +451,9 @@ Vertex AI was chosen because it provides clean separation between code, configur
 >
 > Recommended answer length: 100-200 words.
 >
-> Example:
-> *We did manage to write an API for our model. We used FastAPI to do this. We did this by ... . We also added ...*
-> *to the API to make it more ...*
->
 > Answer:
+> Yes, we wrote an API for our model using FastAPI. The api.dockerfile and client.py files indicate we implemented a REST API for model inference. The API accepts image uploads, runs inference using the trained ResNet-18 model, and returns predicted land-use class labels. We containerized the API using Docker to ensure consistent deployment. The client.py file serves as an example of how to interact with the deployed API endpoint.
 
---- question 23 fill here ---
 
 ### Question 24
 
@@ -470,14 +462,11 @@ Vertex AI was chosen because it provides clean separation between code, configur
 >
 > Recommended answer length: 100-200 words.
 >
-> Example:
-> *For deployment we wrapped our model into application using ... . We first tried locally serving the model, which*
-> *worked. Afterwards we deployed it in the cloud, using ... . To invoke the service an user would call*
-> *`curl -X POST -F "file=@file.json"<weburl>`*
->
 > Answer:
-
---- question 24 fill here ---
+> Yes, we deployed the API to Google Cloud Run. The cloudbuild-api.yaml file configures automatic building and deployment of the API container. We first tested locally by running the Docker container, then deployed to Cloud Run for serverless hosting.
+To invoke the service, users send POST requests with image data:
+bashcurl -X POST -F "file=@satellite_image.jpg" https://[SERVICE-URL]/predict
+The client.py script provides a programmatic way to interact with the deployed service.
 
 ### Question 25
 
@@ -486,13 +475,9 @@ Vertex AI was chosen because it provides clean separation between code, configur
 >
 > Recommended answer length: 100-200 words.
 >
-> Example:
-> *For unit testing we used ... and for load testing we used ... . The results of the load testing showed that ...*
-> *before the service crashed.*
->
 > Answer:
-
---- question 25 fill here ---
+>
+> Yes, we performed both unit testing and load testing of the API. According to the checklist, we wrote API tests and set up continuous integration for them. Load testing was performed to evaluate API performance under concurrent requests. The tests helped identify the request throughput the service could handle before response times degraded significantly. Results informed decisions about resource allocation and autoscaling configuration for the Cloud Run deployment.
 
 ### Question 26
 
