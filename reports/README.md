@@ -208,9 +208,6 @@ These practices are critical in larger projects because they prevent bugs early 
 >
 > Recommended answer length: 50-100 words.
 >
-> Example:
-> *In total we have implemented X tests. Primarily we are testing ... and ... as these the most critical parts of our*
-> *application but also ... .*
 >
 > Answer:
 
