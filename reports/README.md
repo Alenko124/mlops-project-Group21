@@ -486,9 +486,6 @@ The client.py script provides a programmatic way to interact with the deployed s
 >
 > Recommended answer length: 100-200 words.
 >
-> Example:
-> *We did not manage to implement monitoring. We would like to have monitoring implemented such that over time we could*
-> *measure ... and ... that would inform us about this ... behaviour of our application.*
 >
 > Answer:
 
@@ -510,10 +507,6 @@ Metrics such as latency and error rate can indicate issues, while prediction-rel
 >
 > Recommended answer length: 100-200 words.
 >
-> Example:
-> *Group member 1 used ..., Group member 2 used ..., in total ... credits was spend during development. The service*
-> *costing the most was ... due to ... . Working in the cloud was ...*
->
 > Answer:
 
 The most expensive service used during the project was Vertex AI, with a total cost of approximately $5.36. This is expected, as Vertex AI was used to run container-based model training jobs in the cloud, including a full training run of 30 epochs on managed compute resources. The second largest cost came from Cloud Storage ($1.17), which was used to store datasets, model artifacts, and intermediate outputs.
@@ -531,13 +524,15 @@ Overall, working in the cloud was a positive experience. It enabled scalable tra
 >
 > Recommended answer length: 0-200 words.
 >
-> Example:
-> *We implemented a frontend for our API. We did this because we wanted to show the user ... . The frontend was*
-> *implemented using ...*
->
 > Answer:
+> Yes, we implemented several additional features:
 
---- question 28 fill here ---
+Drift detection - Set up monitoring to detect data drift in production using a dedicated drift detection API deployed to the cloud
+Custom metrics collection - The sidecar.yaml file indicates we deployed a metrics sidecar for advanced monitoring
+Alert systems - Created alert systems in GCP to notify when the application behaves incorrectly
+Distributed data loading - Optimized data loading performance for efficient training
+
+These features went beyond basic requirements and enhanced the production readiness of our MLOps pipeline.
 
 ### Question 29
 
@@ -563,8 +558,6 @@ Overall, working in the cloud was a positive experience. It enabled scalable tra
 >
 > Recommended answer length: 200-400 words.
 >
-> Example:
-> *The biggest challenges in the project was using ... tool to do ... . The reason for this was ...*
 >
 > Answer:
 
