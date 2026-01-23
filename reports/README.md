@@ -328,7 +328,13 @@ Unfortunately, we did not implement a model-level continuous integration workflo
 >
 > Answer:
 
---- question 12 fill here ---
+We implemented a flexible configuration system using dataclasses for structured defaults combined with command-line argument overrides for full flexibility. The `TrainingConfig` dataclass defines all experiment parameters (learning rate, epochs, optimizer, etc.) with sensible defaults. The `parse_args()` function provides a full argparse setup that allows CLI overrides of any config field. An example training run:
+
+```bash
+uv run python -m eurosat.train --epochs 30 --lr 1e-4 --optimizer adamw --data-batch-size 32 --model-freeze-backbone
+```
+
+This approach allows both reproducible defaults and quick experimentation. All configurations are logged to Weights & Biases automatically for experiment tracking and comparison.
 
 ### Question 13
 
