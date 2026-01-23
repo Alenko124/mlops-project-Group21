@@ -235,7 +235,9 @@ These practices are critical in larger projects because they prevent bugs early 
 >
 > Answer:
 
-We implemented unit tests located in the tests directory. The tests covered the data processing part of our code, ensuring that data loading and preprocessing functions work correctly. We also wrote tests for model construction to verify that the model architecture is built properly. The continuous integration workflow (tests.yaml) runs these tests automatically on each push to ensure code reliability.
+In total we implemented **10 tests** across two modules.  
+In `test_data.py`, we added **7 tests** that validate the data pipeline: train/val/test splits exist and are non-empty, samples contain the expected keys (`image`, `label`), there are 10 classes with labels in `[0..9]`, transformed images have shape `(3, 224, 224)` and a reasonable normalized range, and the raw EuroSAT dataset has 27,000 samples with 64×64 images before transforms.  
+In `test_model.py`, we added **3 tests** that validate model construction and inference: the model has a classifier, freezing the backbone reduces trainable parameters, and a forward pass returns output of shape `(batch_size, 10)`.
 
 ### Question 8
 
@@ -250,7 +252,7 @@ We implemented unit tests located in the tests directory. The tests covered the 
 >
 > Answer:
 
-Based on the checklist, we calculated code coverage for our project. Even if we achieved close to 100% code coverage, we would not fully trust the code to be error-free. Code coverage only measures which lines of code are executed during tests, not whether the tests are meaningful or cover all edge cases. A test could run every line but still miss logical errors, incorrect assumptions, or unexpected input combinations. High coverage is useful for identifying untested code, but it does not guarantee correctness. Quality of tests matters more than quantity - tests must verify expected behavior and handle edge cases properly.
+Our total code coverage is **88%** (66 statements covered, 8 missed). Even if we achieved close to 100% code coverage, we would not fully trust the code to be error-free. Code coverage only measures which lines of code are executed during tests, not whether the tests are meaningful or cover all edge cases. A test could run every line but still miss logical errors, incorrect assumptions, or unexpected input combinations. High coverage is useful for identifying untested code, but it does not guarantee correctness. Quality of tests matters more than quantity - tests must verify expected behavior and handle edge cases properly.
 
 ### Question 9
 
@@ -301,7 +303,7 @@ Yes, we used DVC for data version control. The presence of data.dvc, .dvc folder
 
 We implemented a comprehensive continuous integration setup using GitHub Actions organized into separate workflows. Our CI pipeline includes unit testing via pytest to validate data loading, model construction, and API functionality. We also integrated linting checks using ruff to enforce code quality standards on every commit.
 
-The CI runs on multiple Python versions (3.10 and 3.11) and operating systems (Ubuntu and macOS) to ensure compatibility across different environments. We utilized caching for dependency installation to speed up workflow execution, which significantly reduced CI runtime on subsequent runs.
+The CI runs on one Python version (3.12) and multiple operating systems (Ubuntu, Windows and macOS) to ensure compatibility across different environments. We utilized caching for dependency installation to speed up workflow execution, which significantly reduced CI runtime on subsequent runs.
 
 Our workflow is triggered on every push to any branch and on pull requests to main, ensuring continuous validation throughout development. This automated testing caught several bugs early and prevented regressions.
 
@@ -443,13 +445,16 @@ These practices improved observability, reduced debugging time, and supported in
 >
 > Answer:
 
-We used the following GCP services in our project:
-**Vertex AI**: Used to run model training in the cloud so training does not need to happen locally.
-**Cloud Run**: Hosts our FastAPI inference service, it runs the containerized API and scales automatically based on incoming requests.
-**Cloud Build**: Builds our Docker image from the repository and can be used in the CI/CD pipeline to automate builds.
-**Artifact Registry**: Stores the built Docker images, Cloud Run pulls images from here during deployment.
-**Cloud Storage (Bucket)**: Stores model weights, data and logged prediction data (request metadata and outputs) for monitoring and drift analysis.
-**Cloud Monitoring**: Collects operational metrics and helps track service health, request rates, latency, and errors (can also be used for alerts).
+We used the following GCP services in our project: 
+
+**Vertex AI**: Used to run model training in the cloud, so training does not need to happen locally.  
+**Cloud Run**: Hosts our FastAPI inference service, it runs the containerized API and scales automatically based on incoming requests.  
+**Cloud Build**: Builds our Docker image from the repository and can be used in the CI/CD pipeline to automate builds.  
+**Artifact Registry**: Stores the built Docker images, Cloud Run pulls images from here during deployment.  
+**Cloud Storage (Bucket)**: Stores model weights, data, and logged prediction data (request metadata and outputs) for monitoring and drift analysis.  
+**Cloud Monitoring**: Collects operational metrics and helps track service health, request rates, latency, and errors, it can also be used for alerts.  
+
+
 
 ### Question 18
 
@@ -562,7 +567,10 @@ bashcurl -X POST -F "file=@satellite_image.jpg" https://eurosat-api-923343148347
 >
 > Answer:
 
-Yes, we performed both unit testing and load testing of the API. According to the checklist, we wrote API tests and set up continuous integration for them. Load testing was performed to evaluate API performance under concurrent requests. The tests helped identify the request throughput the service could handle before response times degraded significantly. Results informed decisions about resource allocation and autoscaling configuration for the Cloud Run deployment.
+For **unit and integration tests**, we used pytest with FastAPI’s TestClient. The tests verify that `/health` returns status 200 and includes the expected JSON fields, and that `/predict` accepts an uploaded image and returns the expected response structure, including predicted_class, confidence, and 5 top predictions. The /predict test is written to handle both cases: it passes with 200 when the model is loaded, and it also accepts a 503 response when the model is not loaded.
+
+For **load testing**, we used Locust. The Locust user simulates realistic traffic with a mix of requests, about 20% `/health` and 80% `/predict`, and uploads randomly generated small RGB images. Requests are marked successful only on HTTP 200, and failures are reported for 503 (model not loaded) or other unexpected codes.
+![Load testing results](figures/locust.JPG)
 
 ### Question 26
 
